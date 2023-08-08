@@ -1,4 +1,4 @@
-import { CreateAuthUseCase } from '@core/auth/application/use-case/create-auth.use-case'
+import { SignUpUseCase } from '@core/auth/application/use-case/sign-up.use-case'
 import Notification from '@core/@shared/domain/notification/notification'
 import { AuthCreateDto } from '@core/auth/application/dto/auth-create.dto'
 import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
@@ -36,7 +36,7 @@ describe('CreateAuthUseCase', () => {
       return Promise.resolve(entity)
     })
 
-    const useCase = new CreateAuthUseCase(repository)
+    const useCase = new SignUpUseCase(repository)
     const inserted = await useCase.execute(inputData)
     const expectResult = {
       id,
@@ -51,7 +51,7 @@ describe('CreateAuthUseCase', () => {
       const inputData: AuthCreateDto = {
         ...builder
       }
-      const useCase = new CreateAuthUseCase(repository)
+      const useCase = new SignUpUseCase(repository)
       await useCase
         .execute(inputData)
         .catch(async (response: NotificationError) => {

@@ -7,7 +7,7 @@ import { AuthCreateResultDto } from '@core/auth/application/dto/auth-create-resu
 import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 
-export class CreateAuthUseCase extends UseCase {
+export class SignUpUseCase extends UseCase {
   constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
