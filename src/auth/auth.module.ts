@@ -7,9 +7,18 @@ import { AuthTypeOrmEntitySchema } from '@core/auth/infra/db/typeorm/auth.typeor
 import { SignUpUseCase } from '@core/auth/application/use-case/sign-up.use-case'
 import { AuthController } from './auth.controller'
 import AuthEntity from '@core/auth/domain/entities/auth.entity'
+import { ConfigService } from '@nestjs/config'
+import { JwtModule, JwtService } from '@nestjs/jwt'
+import { PassportModule } from '@nestjs/passport'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthTypeOrmEntitySchema])],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.ACCESS_TOKEN_SECRET
+    }),
+    TypeOrmModule.forFeature([AuthTypeOrmEntitySchema])
+  ],
   controllers: [AuthController],
   providers: [
     {
@@ -23,10 +32,14 @@ import AuthEntity from '@core/auth/domain/entities/auth.entity'
     /* CreateAuthUseCase */
     {
       provide: SignUpUseCase,
-      useFactory: async (repo: AuthTypeOrmRepository<AuthEntity>) => {
-        return new SignUpUseCase(repo)
+      useFactory: async (
+        repo: AuthTypeOrmRepository<AuthEntity>,
+        configService: ConfigService,
+        jwtService: JwtService
+      ) => {
+        return new SignUpUseCase(repo, jwtService, configService)
       },
-      inject: [AuthTypeOrmRepository]
+      inject: [AuthTypeOrmRepository, ConfigService, JwtService]
     }
   ]
 })

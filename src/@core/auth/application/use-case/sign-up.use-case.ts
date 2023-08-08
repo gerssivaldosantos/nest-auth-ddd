@@ -6,9 +6,15 @@ import NotificationError from '@core/@shared/domain/notification/notification.er
 import { AuthCreateResultDto } from '@core/auth/application/dto/auth-create-result.dto'
 import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
 
 export class SignUpUseCase extends UseCase {
-  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
+  constructor(
+    private repository: AuthTypeOrmRepository<AuthEntity>,
+    private jwtService: JwtService,
+    private configService: ConfigService
+  ) {
     super()
   }
 
