@@ -25,7 +25,7 @@ import {
 } from 'class-validator'
 import { Entity } from '@core/@shared/domain/entity/entity'
 import { ApiProperty } from '@nestjs/swagger'
-import argon2 from 'argon2'
+import * as argon2 from 'argon2'
 export type UserInput = {
   id: string
 
@@ -101,8 +101,6 @@ export default class UserEntity extends Entity {
 
   constructor(User: UserInput, notification: NotificationInterface) {
     super(notification, User?.id || null)
-
-    this.id = User.id
     this.name = User.name
     this.email = User.email
     this.password = User.password

@@ -10,7 +10,8 @@ import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { SearchParams } from '@core/@shared/domain/repository/search-params.repository'
 import { FilterCondition } from '@core/@shared/infra/types'
-import argon2 from 'argon2'
+import * as argon2 from 'argon2'
+
 export class SignUpUseCase extends UseCase {
   constructor(
     private repository: UserTypeOrmRepository<UserEntity>,
@@ -54,13 +55,12 @@ export class SignUpUseCase extends UseCase {
           new NotificationError('Email já cadastrado', HttpErrorCode.CONFLICT)
         )
       }
-      const UserInserted = await this.repository.insert(entity)
 
       const [accessToken, refreshToken] = await Promise.all([
         this.jwtService.signAsync(
           {
-            sub: UserInserted.id,
-            username: UserInserted.email
+            sub: entity.id,
+            username: entity.email
           },
           {
             secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
@@ -69,8 +69,8 @@ export class SignUpUseCase extends UseCase {
         ),
         this.jwtService.signAsync(
           {
-            sub: UserInserted.id,
-            username: UserInserted.email
+            sub: entity.id,
+            username: entity.email
           },
           {
             secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
@@ -79,11 +79,9 @@ export class SignUpUseCase extends UseCase {
         )
       ])
 
-      const hashedRefreshToken = await argon2.hash(refreshToken)
-      await this.repository.update({
-        id: UserInserted.id,
-        refreshToken: hashedRefreshToken
-      } as UserEntity)
+      entity.refreshToken = await argon2.hash(refreshToken)
+      const UserInserted = await this.repository.insert(entity)
+
       return {
         id: UserInserted.id,
         name: UserInserted.name,
