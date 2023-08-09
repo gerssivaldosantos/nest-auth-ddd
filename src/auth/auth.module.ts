@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport'
 import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
 import { UserTypeOrmEntitySchema } from '@core/user/infra/db/typeorm/user.typeorm-entity.schema'
 import UserEntity from '@core/user/domain/entities/user.entity'
+import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import UserEntity from '@core/user/domain/entities/user.entity'
       },
       inject: [getDataSourceToken()]
     },
-    /* SignInUseCase */
+    /* SignUpUseCase */
     {
       provide: SignUpUseCase,
       useFactory: async (
@@ -38,6 +39,18 @@ import UserEntity from '@core/user/domain/entities/user.entity'
         jwtService: JwtService
       ) => {
         return new SignUpUseCase(repo, jwtService, configService)
+      },
+      inject: [UserTypeOrmRepository, ConfigService, JwtService]
+    },
+    /* SignInUseCase */
+    {
+      provide: SignInUseCase,
+      useFactory: async (
+        repo: UserTypeOrmRepository<UserEntity>,
+        configService: ConfigService,
+        jwtService: JwtService
+      ) => {
+        return new SignInUseCase(repo, jwtService, configService)
       },
       inject: [UserTypeOrmRepository, ConfigService, JwtService]
     }
