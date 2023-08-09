@@ -25,7 +25,7 @@ import {
 } from 'class-validator'
 import { Entity } from '@core/@shared/domain/entity/entity'
 import { ApiProperty } from '@nestjs/swagger'
-
+import argon2 from 'argon2'
 export type UserInput = {
   id: string
 
@@ -93,6 +93,10 @@ export default class UserEntity extends Entity {
 
   getPlainClass(): any {
     return UserEntity
+  }
+
+  async encryptPassword(): Promise<void> {
+    this.password = await argon2.hash(this.password)
   }
 
   constructor(User: UserInput, notification: NotificationInterface) {

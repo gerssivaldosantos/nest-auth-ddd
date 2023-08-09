@@ -1,17 +1,19 @@
-import AuthEntity from '@core/auth/domain/entities/auth.entity'
+import UserEntity from '@core/user/domain/entities/user.entity'
 import { UseCase } from '@core/@shared/application/use-case/use-case'
-import { AuthCreateDto } from '@core/auth/application/dto/auth-create.dto'
-import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
+import { UserCreateDto } from '@core/user/application/dto/user-create.dto'
+import { UserPresenter } from '@core/user/application/presenter/user.presenter'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-import { AuthCreateResultDto } from '@core/auth/application/dto/auth-create-result.dto'
-import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
+import { UserCreateResultDto } from '@core/user/application/dto/user-create-result.dto'
+import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-
+import { SearchParams } from '@core/@shared/domain/repository/search-params.repository'
+import { FilterCondition } from '@core/@shared/infra/types'
+import argon2 from 'argon2'
 export class SignUpUseCase extends UseCase {
   constructor(
-    private repository: AuthTypeOrmRepository<AuthEntity>,
+    private repository: UserTypeOrmRepository<UserEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
   ) {
@@ -19,12 +21,13 @@ export class SignUpUseCase extends UseCase {
   }
 
   async execute(
-    data: AuthCreateDto
-  ): Promise<AuthCreateResultDto | NotificationError> {
-    const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(
+    data: { refreshToken: string } & UserCreateDto
+  ): Promise<UserCreateResultDto | NotificationError> {
+    const entity: UserEntity = await UserPresenter.dataToEntity<UserEntity>(
       data,
-      AuthEntity
+      UserEntity
     )
+    await entity.encryptPassword()
     if (entity.notification.hasError()) {
       return Promise.reject(
         new NotificationError(
@@ -34,8 +37,60 @@ export class SignUpUseCase extends UseCase {
         )
       )
     } else {
-      const AuthInserted = await this.repository.insert(entity)
-      return AuthPresenter.entityToData(AuthInserted)
+      const resultByEmail = await this.repository.search(
+        new SearchParams<FilterCondition>(
+          {
+            filter: [{ email: data.email }]
+          },
+          {
+            parser(filter: FilterCondition): FilterCondition {
+              return filter
+            }
+          }
+        )
+      )
+      if (resultByEmail.total > 0) {
+        return Promise.reject(
+          new NotificationError('Email já cadastrado', HttpErrorCode.CONFLICT)
+        )
+      }
+      const UserInserted = await this.repository.insert(entity)
+
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.signAsync(
+          {
+            sub: UserInserted.id,
+            username: UserInserted.email
+          },
+          {
+            secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+            expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION')
+          }
+        ),
+        this.jwtService.signAsync(
+          {
+            sub: UserInserted.id,
+            username: UserInserted.email
+          },
+          {
+            secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+            expiresIn: '7d'
+          }
+        )
+      ])
+
+      const hashedRefreshToken = await argon2.hash(refreshToken)
+      await this.repository.update({
+        id: UserInserted.id,
+        refreshToken: hashedRefreshToken
+      } as UserEntity)
+      return {
+        id: UserInserted.id,
+        name: UserInserted.name,
+        email: UserInserted.email,
+        accessToken,
+        refreshToken
+      } as unknown as UserCreateResultDto
     }
   }
 }
