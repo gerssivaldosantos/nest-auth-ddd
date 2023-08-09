@@ -105,7 +105,7 @@ export class SignInUseCase extends UseCase {
         accessToken,
         refreshToken,
         ...resultFindByEmail
-      } as unknown as SignInResultDto
+      }
     }
   }
 }
