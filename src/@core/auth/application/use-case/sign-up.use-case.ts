@@ -1,6 +1,5 @@
 import UserEntity from '@core/user/domain/entities/user.entity'
 import { UseCase } from '@core/@shared/application/use-case/use-case'
-import { UserCreateDto } from '@core/user/application/dto/user-create.dto'
 import { UserPresenter } from '@core/user/application/presenter/user.presenter'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 import { UserCreateResultDto } from '@core/user/application/dto/user-create-result.dto'
@@ -11,6 +10,8 @@ import { JwtService } from '@nestjs/jwt'
 import { SearchParams } from '@core/@shared/domain/repository/search-params.repository'
 import { FilterCondition } from '@core/@shared/infra/types'
 import * as argon2 from 'argon2'
+import { SignUpDTO } from '@core/auth/application/dto/sign-up.dto'
+import { SignUpResultDto } from '@core/auth/application/dto/sign-up-result.dto'
 
 export class SignUpUseCase extends UseCase {
   constructor(
@@ -21,9 +22,7 @@ export class SignUpUseCase extends UseCase {
     super()
   }
 
-  async execute(
-    data: { refreshToken: string } & UserCreateDto
-  ): Promise<UserCreateResultDto | NotificationError> {
+  async execute(data: SignUpDTO): Promise<SignUpResultDto | NotificationError> {
     const entity: UserEntity = await UserPresenter.dataToEntity<UserEntity>(
       data,
       UserEntity
@@ -88,7 +87,7 @@ export class SignUpUseCase extends UseCase {
         email: UserInserted.email,
         accessToken,
         refreshToken
-      } as unknown as UserCreateResultDto
+      }
     }
   }
 }

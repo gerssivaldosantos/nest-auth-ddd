@@ -7,9 +7,9 @@ import {
   Post,
   UseFilters
 } from '@nestjs/common'
-import { AuthCreateDto } from '@core/auth/application/dto/auth-create.dto'
+import { SignUpDTO } from '@core/auth/application/dto/sign-up.dto'
 import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AuthCreateResultDto } from '@core/auth/application/dto/auth-create-result.dto'
+import { SignUpResultDto } from '@core/auth/application/dto/sign-up-result.dto'
 import { NotificationErrorExceptionFilter } from '../exceptionFilter'
 
 @ApiTags('Auth')
@@ -20,13 +20,13 @@ export class AuthController {
 
   @ApiBody({
     description: 'Auth - Create a record',
-    type: () => AuthCreateDto
+    type: () => SignUpDTO
   })
   @ApiConsumes('application/json')
-  @ApiResponse({ type: () => AuthCreateResultDto })
+  @ApiResponse({ type: () => SignUpResultDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  signUp(@Body() createAuthDto: AuthCreateDto) {
+  signUp(@Body() createAuthDto: SignUpDTO) {
     return this.signUpUseCase.execute(createAuthDto)
   }
 }

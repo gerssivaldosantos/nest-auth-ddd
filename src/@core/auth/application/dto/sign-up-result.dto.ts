@@ -23,7 +23,7 @@ import {
 } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class AuthCreateDto {
+export class SignUpResultDto {
   @ApiProperty({ description: 'ID' })
   @IsUUID()
   @IsOptional()
@@ -41,22 +41,17 @@ export class AuthCreateDto {
   @MaxLength(100, { message: 'E-mail deve ter no máximo 100 caracteres' })
   email: string
 
-  @ApiProperty({ description: 'Senha' })
-  @IsString()
-  @IsNotEmpty({ message: 'Senha é obrigatório' })
-  @MaxLength(100, { message: 'Senha deve ter no máximo 100 caracteres' })
-  password: string
-
   @ApiProperty({ description: 'Token de Atualização' })
   @IsString()
-  @IsOptional()
   @MaxLength(255, {
     message: 'Token de Atualização deve ter no máximo 255 caracteres'
   })
-  refreshToken: string | null
+  refreshToken: string
 
-  @ApiProperty({ description: 'Data de Expiração do Token de Atualização' })
-  @IsDateString()
-  @IsOptional()
-  refreshTokenExpiration: string | null
+  @ApiProperty({ description: 'Token de acesso' })
+  @MaxLength(255, {
+    message: 'Token de Acesso deve ter no máximo 255 caracteres'
+  })
+  @IsString()
+  accessToken: string
 }
