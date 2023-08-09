@@ -26,7 +26,7 @@ export class AuthController {
   @ApiResponse({ type: () => SignUpResultDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  signUp(@Body() createAuthDto: SignUpDTO) {
-    return this.signUpUseCase.execute(createAuthDto)
+  signUp(@Body() data: SignUpDTO) {
+    return this.signUpUseCase.execute(data)
   }
 }
