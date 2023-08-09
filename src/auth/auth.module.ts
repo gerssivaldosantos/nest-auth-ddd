@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common'
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
 import Notification from '@core/@shared/domain/notification/notification'
-import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
-import { AuthTypeOrmEntitySchema } from '@core/auth/infra/db/typeorm/auth.typeorm-entity.schema'
 import { SignUpUseCase } from '@core/auth/application/use-case/sign-up.use-case'
 import { AuthController } from './auth.controller'
-import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
+import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { UserTypeOrmEntitySchema } from '@core/user/infra/db/typeorm/user.typeorm-entity.schema'
+import UserEntity from '@core/user/domain/entities/user.entity'
 
 @Module({
   imports: [
@@ -17,29 +17,29 @@ import { PassportModule } from '@nestjs/passport'
     JwtModule.register({
       secret: process.env.ACCESS_TOKEN_SECRET
     }),
-    TypeOrmModule.forFeature([AuthTypeOrmEntitySchema])
+    TypeOrmModule.forFeature([UserTypeOrmEntitySchema])
   ],
   controllers: [AuthController],
   providers: [
     {
-      provide: AuthTypeOrmRepository,
+      provide: UserTypeOrmRepository,
       useFactory: async (dataSource: DataSource) => {
         const notification = new Notification()
-        return new AuthTypeOrmRepository(dataSource, notification)
+        return new UserTypeOrmRepository(dataSource, notification)
       },
       inject: [getDataSourceToken()]
     },
-    /* CreateAuthUseCase */
+    /* SignInUseCase */
     {
       provide: SignUpUseCase,
       useFactory: async (
-        repo: AuthTypeOrmRepository<AuthEntity>,
+        repo: UserTypeOrmRepository<UserEntity>,
         configService: ConfigService,
         jwtService: JwtService
       ) => {
         return new SignUpUseCase(repo, jwtService, configService)
       },
-      inject: [AuthTypeOrmRepository, ConfigService, JwtService]
+      inject: [UserTypeOrmRepository, ConfigService, JwtService]
     }
   ]
 })
