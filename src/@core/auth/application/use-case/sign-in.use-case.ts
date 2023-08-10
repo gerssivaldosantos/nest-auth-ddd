@@ -87,7 +87,9 @@ export class SignInUseCase extends UseCase {
           },
           {
             secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-            expiresIn: '7d'
+            expiresIn: this.configService.get<string>(
+              'REFRESH_TOKEN_EXPIRATION'
+            )
           }
         )
       ])
@@ -100,11 +102,12 @@ export class SignInUseCase extends UseCase {
         UserEntity
       )
       await this.repository.update(entityUpdated)
-
       return {
+        id: resultFindByEmail.id,
+        name: resultFindByEmail.name,
+        email: resultFindByEmail.email,
         accessToken,
-        refreshToken,
-        ...resultFindByEmail
+        refreshToken
       }
     }
   }

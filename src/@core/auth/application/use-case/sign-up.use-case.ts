@@ -86,7 +86,7 @@ export class SignUpUseCase extends UseCase {
         name: UserInserted.name,
         email: UserInserted.email,
         accessToken,
-        refreshToken: UserInserted.refreshToken
+        refreshToken
       }
     }
   }

@@ -69,11 +69,13 @@ export class RefreshTokenUseCase extends UseCase {
       UserEntity
     )
     await this.repository.update(entityUpdated)
-
+    const user = entityUpdated.toJSON()
     return {
-      ...entityUpdated,
+      id: user.id,
+      name: user.name,
+      email: user.email,
       accessToken: newAccessToken,
-      refreshToken: hashedToken
+      refreshToken: newRefreshToken
     }
   }
 }
