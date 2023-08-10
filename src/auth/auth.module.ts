@@ -14,6 +14,7 @@ import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
 import { LogoutUseCase } from '@core/auth/application/use-case/logout.use-case'
 import { AccessTokenStrategy } from './strategies/accessToken.strategy'
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy'
+import { RefreshTokenUseCase } from '@core/auth/application/use-case/refresh-token.use-case'
 
 @Module({
   imports: [
@@ -68,6 +69,18 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy'
         jwtService: JwtService
       ) => {
         return new LogoutUseCase(repo, jwtService, configService)
+      },
+      inject: [UserTypeOrmRepository, ConfigService, JwtService]
+    },
+    /* RefreshTokenUseCase */
+    {
+      provide: RefreshTokenUseCase,
+      useFactory: async (
+        repo: UserTypeOrmRepository<UserEntity>,
+        configService: ConfigService,
+        jwtService: JwtService
+      ) => {
+        return new RefreshTokenUseCase(repo, jwtService, configService)
       },
       inject: [UserTypeOrmRepository, ConfigService, JwtService]
     }

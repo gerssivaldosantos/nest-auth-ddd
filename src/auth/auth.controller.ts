@@ -19,6 +19,8 @@ import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
 import { AccessTokenGuard } from './guards/access-token.guard'
 import { AuthUser } from './decorator/decorator.auth_user'
 import { LogoutUseCase } from '@core/auth/application/use-case/logout.use-case'
+import { RefreshTokenGuard } from './guards/refresh-token.guard'
+import { RefreshTokenUseCase } from '@core/auth/application/use-case/refresh-token.use-case'
 
 @ApiTags('Auth')
 @UseFilters(NotificationErrorExceptionFilter)
@@ -27,7 +29,8 @@ export class AuthController {
   constructor(
     private signUpUseCase: SignUpUseCase,
     private signInUseCase: SignInUseCase,
-    private logoutUseCase: LogoutUseCase
+    private logoutUseCase: LogoutUseCase,
+    private refreshTokenUseCase: RefreshTokenUseCase
   ) {}
 
   @ApiBody({
@@ -80,5 +83,17 @@ export class AuthController {
   @Get('logout')
   logout(@AuthUser('sub') sub: string) {
     return this.logoutUseCase.execute(sub)
+  }
+
+  @ApiConsumes('application/json')
+  @ApiResponse({ type: SignInResultDto })
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh')
+  refreshTokens(
+    @AuthUser('sub') sub: string,
+    @AuthUser('refreshToken') refreshToken: string
+  ) {
+    return this.refreshTokenUseCase.execute({ id: sub, refreshToken })
   }
 }
