@@ -72,8 +72,8 @@ export class SignInUseCase extends UseCase {
       const [accessToken, refreshToken] = await Promise.all([
         this.jwtService.signAsync(
           {
-            sub: entity.id,
-            username: entity.email
+            sub: resultFindByEmail.id,
+            username: resultFindByEmail.email
           },
           {
             secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),

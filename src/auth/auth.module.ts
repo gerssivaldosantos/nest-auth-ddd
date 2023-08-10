@@ -11,6 +11,9 @@ import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-
 import { UserTypeOrmEntitySchema } from '@core/user/infra/db/typeorm/user.typeorm-entity.schema'
 import UserEntity from '@core/user/domain/entities/user.entity'
 import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
+import { LogoutUseCase } from '@core/auth/application/use-case/logout.use-case'
+import { AccessTokenStrategy } from './strategies/accessToken.strategy'
+import { RefreshTokenStrategy } from './strategies/refreshToken.strategy'
 
 @Module({
   imports: [
@@ -22,6 +25,8 @@ import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
   ],
   controllers: [AuthController],
   providers: [
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
     {
       provide: UserTypeOrmRepository,
       useFactory: async (dataSource: DataSource) => {
@@ -51,6 +56,18 @@ import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
         jwtService: JwtService
       ) => {
         return new SignInUseCase(repo, jwtService, configService)
+      },
+      inject: [UserTypeOrmRepository, ConfigService, JwtService]
+    },
+    /* LogoutUseCase */
+    {
+      provide: LogoutUseCase,
+      useFactory: async (
+        repo: UserTypeOrmRepository<UserEntity>,
+        configService: ConfigService,
+        jwtService: JwtService
+      ) => {
+        return new LogoutUseCase(repo, jwtService, configService)
       },
       inject: [UserTypeOrmRepository, ConfigService, JwtService]
     }
