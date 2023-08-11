@@ -76,11 +76,6 @@ export default class UserEntity extends Entity {
   })
   refreshToken: string | null
 
-  @ApiProperty({ description: 'Data de Expiração do Token de Atualização' })
-  @IsDateString()
-  @IsOptional()
-  refreshTokenExpiration: string | null
-
   @ApiProperty({ description: 'Data de criação' })
   @IsDateString()
   @IsNotEmpty({ message: 'Data de criação é obrigatório' })
@@ -105,7 +100,6 @@ export default class UserEntity extends Entity {
     this.email = User.email
     this.password = User.password
     this.refreshToken = User?.refreshToken
-    this.refreshTokenExpiration = User?.refreshTokenExpiration
     this.createdAt = User.createdAt
       ? this.dateToStringISO(User.createdAt)
       : this.dateToStringISO(new Date())

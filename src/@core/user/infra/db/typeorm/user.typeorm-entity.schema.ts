@@ -124,19 +124,6 @@ export class UserTypeOrmEntitySchema {
   refreshToken: string
 
   @ApiProperty({
-    description: 'Data de Expiração do Token de Atualização',
-    required: true
-  })
-  @Column({
-    type: process.env.DATABASE_TYPE === 'sqlite' ? 'datetime' : 'timestamp',
-    name: 'refresh_token_expiration',
-    nullable: true
-  })
-  @IsDateString()
-  @IsOptional()
-  refreshTokenExpiration: Date
-
-  @ApiProperty({
     description: 'Data de criação',
     required: false
   })
