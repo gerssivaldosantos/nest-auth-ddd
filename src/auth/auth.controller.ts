@@ -27,7 +27,7 @@ import { SignInResultDto } from '@core/auth/application/dto/sign-in-result.dto'
 import { SignInDTO } from '@core/auth/application/dto/sign-in.dto'
 import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
 import { AccessTokenGuard } from './guards/access-token.guard'
-import { AuthAuth } from './decorator/decorator.auth_auth'
+import { AuthUser } from './decorator/decorator.auth_user'
 import { LogoutUseCase } from '@core/auth/application/use-case/logout.use-case'
 import { RefreshTokenGuard } from './guards/refresh-token.guard'
 import { RefreshTokenUseCase } from '@core/auth/application/use-case/refresh-token.use-case'
@@ -107,7 +107,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @Get('logout')
-  logout(@AuthAuth('sub') sub: string) {
+  logout(@AuthUser('sub') sub: string) {
     return this.logoutUseCase.execute(sub)
   }
 
@@ -117,8 +117,8 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
   refreshTokens(
-    @AuthAuth('sub') sub: string,
-    @AuthAuth('refreshToken') refreshToken: string
+    @AuthUser('sub') sub: string,
+    @AuthUser('refreshToken') refreshToken: string
   ) {
     return this.refreshTokenUseCase.execute({ id: sub, refreshToken })
   }

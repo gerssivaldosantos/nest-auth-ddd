@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config'
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm'
 import { join } from 'path'
 import { AuthTypeOrmEntitySchema } from '@core/auth/infra/db/typeorm/auth.typeorm-entity.schema'
-import { UserTypeOrmEntitySchema } from '@core/user/infra/db/typeorm/user.typeorm-entity.schema'
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -22,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       dropSchema: false,
       keepConnectionAlive: true,
       logging: this.configService.get('app.nodeEnv') !== 'production',
-      entities: [AuthTypeOrmEntitySchema, UserTypeOrmEntitySchema],
+      entities: [AuthTypeOrmEntitySchema],
       subscribers: [join(__dirname, '/../**/*.event-subscribe{.ts,.js}')],
       migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
       seeds: [join(__dirname, '/seeds/**/*{.ts,.js}')],

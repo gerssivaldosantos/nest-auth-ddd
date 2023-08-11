@@ -1,9 +1,8 @@
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { UseCase } from '@core/@shared/application/use-case/use-case'
-import { UserPresenter } from '@core/user/application/presenter/user.presenter'
+import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-import { AuthCreateResultDto } from '@core/auth/application/dto/auth-create-result.dto'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -15,7 +14,7 @@ import { SignUpResultDto } from '@core/auth/application/dto/sign-up-result.dto'
 
 export class SignUpUseCase extends UseCase {
   constructor(
-    private repository: UserTypeOrmRepository<UserEntity>,
+    private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
   ) {
@@ -23,9 +22,9 @@ export class SignUpUseCase extends UseCase {
   }
 
   async execute(data: SignUpDTO): Promise<SignUpResultDto | NotificationError> {
-    const entity: UserEntity = await UserPresenter.dataToEntity<UserEntity>(
+    const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(
       data,
-      UserEntity
+      AuthEntity
     )
     await entity.encryptPassword()
     if (entity.notification.hasError()) {
@@ -79,12 +78,12 @@ export class SignUpUseCase extends UseCase {
       ])
 
       entity.refreshToken = await argon2.hash(refreshToken)
-      const UserInserted = await this.repository.insert(entity)
+      const AuthInserted = await this.repository.insert(entity)
 
       return {
-        id: UserInserted.id,
-        name: UserInserted.name,
-        email: UserInserted.email,
+        id: AuthInserted.id,
+        name: AuthInserted.name,
+        email: AuthInserted.email,
         accessToken,
         refreshToken
       }

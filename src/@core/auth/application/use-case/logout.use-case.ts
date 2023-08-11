@@ -1,15 +1,15 @@
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { UseCase } from '@core/@shared/application/use-case/use-case'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { UserPresenter } from '@core/user/application/presenter/user.presenter'
+import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
 
 export class LogoutUseCase extends UseCase {
   constructor(
-    private repository: UserTypeOrmRepository<UserEntity>,
+    private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
   ) {
@@ -23,12 +23,12 @@ export class LogoutUseCase extends UseCase {
         new NotificationError('Email não cadastrado', HttpErrorCode.BAD_REQUEST)
       )
     }
-    const entityUpdated = await UserPresenter.dataToEntity<UserEntity>(
+    const entityUpdated = await AuthPresenter.dataToEntity<AuthEntity>(
       {
         ...resultFindByEmail,
         refreshToken: null
       },
-      UserEntity
+      AuthEntity
     )
     await this.repository.update(entityUpdated)
 

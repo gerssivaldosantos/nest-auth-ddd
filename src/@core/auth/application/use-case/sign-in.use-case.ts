@@ -1,7 +1,7 @@
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { UseCase } from '@core/@shared/application/use-case/use-case'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
@@ -10,13 +10,12 @@ import { FilterCondition } from '@core/@shared/infra/types'
 import * as argon2 from 'argon2'
 import { SignInDTO } from '@core/auth/application/dto/sign-in.dto'
 import { SignInResultDto } from '@core/auth/application/dto/sign-in-result.dto'
-import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
-import { UserPresenter } from '@core/user/application/presenter/user.presenter'
+import SignInEntity from '@core/auth/domain/entities/sign-in.entity'
 
 export class SignInUseCase extends UseCase {
   constructor(
-    private repository: UserTypeOrmRepository<UserEntity>,
+    private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
   ) {
@@ -24,9 +23,9 @@ export class SignInUseCase extends UseCase {
   }
 
   async execute(data: SignInDTO): Promise<SignInResultDto | NotificationError> {
-    const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(
+    const entity: SignInEntity = await AuthPresenter.dataToEntity<SignInEntity>(
       data,
-      AuthEntity
+      SignInEntity
     )
     if (entity.notification.hasError()) {
       return Promise.reject(
@@ -73,7 +72,7 @@ export class SignInUseCase extends UseCase {
         this.jwtService.signAsync(
           {
             sub: resultFindByEmail.id,
-            username: resultFindByEmail.email
+            authname: resultFindByEmail.email
           },
           {
             secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
@@ -83,7 +82,7 @@ export class SignInUseCase extends UseCase {
         this.jwtService.signAsync(
           {
             sub: resultFindByEmail.id,
-            username: resultFindByEmail.email
+            authname: resultFindByEmail.email
           },
           {
             secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
@@ -94,12 +93,12 @@ export class SignInUseCase extends UseCase {
         )
       ])
       const hashedToken = await argon2.hash(refreshToken)
-      const entityUpdated = await UserPresenter.dataToEntity<UserEntity>(
+      const entityUpdated = await AuthPresenter.dataToEntity<AuthEntity>(
         {
           ...resultFindByEmail,
           refreshToken: hashedToken
         },
-        UserEntity
+        AuthEntity
       )
       await this.repository.update(entityUpdated)
       return {
