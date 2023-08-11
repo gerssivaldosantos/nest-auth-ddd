@@ -1,30 +1,30 @@
-import { FindByIdUserUseCase } from '@core/user/application/use-case/findById-user.use-case'
+import { FindByIdAuthUseCase } from '@core/auth/application/use-case/findById-auth.use-case'
 import Notification from '@core/@shared/domain/notification/notification'
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { SearchResult } from '@core/@shared/domain/repository/search-result.repository'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
 import { DataSource } from 'typeorm'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-import { UserFakerDatabuilder } from '@core/user/domain/entities/user.faker.databuilder'
+import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
 
 let notification: Notification
-let entity: UserEntity
+let entity: AuthEntity
 let result: SearchResult
 let dataSource: DataSource
-let repository: UserTypeOrmRepository<UserEntity>
+let repository: AuthTypeOrmRepository<AuthEntity>
 
 jest.setTimeout(10000) // 10 seconds
-describe('FindByIdUserUseCase', () => {
+describe('FindByIdAuthUseCase', () => {
   beforeAll(async () => {
     notification = new Notification()
     dataSource = await TypeOrmFactory.getDataSourceInstance('.env.test')
-    repository = new UserTypeOrmRepository(dataSource, notification)
-    entity = new UserEntity(
-      new UserFakerDatabuilder().buildValid(),
+    repository = new AuthTypeOrmRepository(dataSource, notification)
+    entity = new AuthEntity(
+      new AuthFakerDatabuilder().buildValid(),
       notification
     )
-    result = new SearchResult<UserEntity>({
+    result = new SearchResult<AuthEntity>({
       items: [entity],
       total: 1,
       perPage: 1,
@@ -33,21 +33,21 @@ describe('FindByIdUserUseCase', () => {
     })
   })
 
-  it('Should get an User', async () => {
+  it('Should get an Auth', async () => {
     jest
       .spyOn(repository, 'findById')
       .mockImplementation(async (): Promise<any> => {
         return Promise.resolve(result)
       })
-    const useCase = new FindByIdUserUseCase(repository)
+    const useCase = new FindByIdAuthUseCase(repository)
     expect(await useCase.execute('1')).toEqual(result)
   })
 
-  it('Should return a SearchResult when User not found', async () => {
+  it('Should return a SearchResult when Auth not found', async () => {
     jest
       .spyOn(repository, 'findById')
       .mockImplementation(async (): Promise<any> => {
-        const result: SearchResult = new SearchResult<UserEntity>({
+        const result: SearchResult = new SearchResult<AuthEntity>({
           items: [],
           total: 0,
           perPage: 1,
@@ -56,7 +56,7 @@ describe('FindByIdUserUseCase', () => {
         })
         return Promise.resolve(result)
       })
-    const useCase = new FindByIdUserUseCase(repository)
+    const useCase = new FindByIdAuthUseCase(repository)
     const useCaseResult = await useCase.execute('1')
     expect(useCaseResult).toEqual({
       items: [],
@@ -75,7 +75,7 @@ describe('FindByIdUserUseCase', () => {
         const notification = new Notification()
         notification.addError({
           message: 'O campo ID é obrigatório',
-          context: 'User',
+          context: 'Auth',
           target: 'findById',
           value: undefined
         })
@@ -83,7 +83,7 @@ describe('FindByIdUserUseCase', () => {
           new NotificationError(notification.getPlainMessageErrors())
         )
       })
-    const useCase = new FindByIdUserUseCase(repository)
+    const useCase = new FindByIdAuthUseCase(repository)
     await expect(useCase.execute(undefined)).rejects.toThrowError(
       'O campo ID é obrigatório'
     )

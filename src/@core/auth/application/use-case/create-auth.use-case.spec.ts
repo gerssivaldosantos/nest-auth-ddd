@@ -1,30 +1,30 @@
-import { CreateUserUseCase } from '@core/user/application/use-case/create-user.use-case'
+import { CreateAuthUseCase } from '@core/auth/application/use-case/create-auth.use-case'
 import Notification from '@core/@shared/domain/notification/notification'
-import { UserCreateDto } from '@core/user/application/dto/user-create.dto'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthCreateDto } from '@core/auth/application/dto/auth-create.dto'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
 import { DataSource } from 'typeorm'
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import crypto from 'crypto'
-import { UserFakerDatabuilder } from '@core/user/domain/entities/user.faker.databuilder'
+import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
-const builder = new UserFakerDatabuilder().buildValid()
+const builder = new AuthFakerDatabuilder().buildValid()
 
 jest.setTimeout(10000) // 10 seconds
-describe('CreateUserUseCase', () => {
+describe('CreateAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
-  let repository: UserTypeOrmRepository<UserEntity>
+  let repository: AuthTypeOrmRepository<AuthEntity>
 
   beforeEach(async () => {
     notification = new Notification()
     dataSource = await TypeOrmFactory.getDataSourceInstance('.env.test')
-    repository = new UserTypeOrmRepository(dataSource, notification)
+    repository = new AuthTypeOrmRepository(dataSource, notification)
   })
 
-  it('Should insert a valid user', async () => {
-    const inputData: UserCreateDto = {
-      ...new UserFakerDatabuilder().buildValid()
+  it('Should insert a valid auth', async () => {
+    const inputData: AuthCreateDto = {
+      ...new AuthFakerDatabuilder().buildValid()
     }
     const id = crypto.randomUUID()
     jest.spyOn(repository, 'insert').mockImplementation((): Promise<any> => {
@@ -32,11 +32,11 @@ describe('CreateUserUseCase', () => {
         id,
         ...inputData
       }
-      const entity = new UserEntity(data, notification)
+      const entity = new AuthEntity(data, notification)
       return Promise.resolve(entity)
     })
 
-    const useCase = new CreateUserUseCase(repository)
+    const useCase = new CreateAuthUseCase(repository)
     const inserted = await useCase.execute(inputData)
     const expectResult = {
       id,
@@ -45,18 +45,18 @@ describe('CreateUserUseCase', () => {
     expect(inserted).toMatchObject(expectResult)
   })
 
-  it('Should return an error on try to create an invalid user', async () => {
+  it('Should return an error on try to create an invalid auth', async () => {
     for (const field of builder.fields) {
       builder.setInValidField(field)
-      const inputData: UserCreateDto = {
+      const inputData: AuthCreateDto = {
         ...builder
       }
-      const useCase = new CreateUserUseCase(repository)
+      const useCase = new CreateAuthUseCase(repository)
       await useCase
         .execute(inputData)
         .catch(async (response: NotificationError) => {
           const notification = new Notification()
-          const mockEntity = new UserEntity(inputData, notification)
+          const mockEntity = new AuthEntity(inputData, notification)
           await mockEntity.validate()
           const { message, code } = response
           expect(message).toEqual(

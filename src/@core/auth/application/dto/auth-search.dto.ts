@@ -2,7 +2,7 @@ import { IsArray, IsNumber, IsOptional } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { FilterCondition, SortParam } from '@core/@shared/infra/types'
 
-export class UserSearchDto {
+export class AuthSearchDto {
   @ApiProperty({
     description: 'Number of page to be returned',
     type: 'number',

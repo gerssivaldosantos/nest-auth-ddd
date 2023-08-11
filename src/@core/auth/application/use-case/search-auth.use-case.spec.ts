@@ -1,27 +1,27 @@
 import Notification from '@core/@shared/domain/notification/notification'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
 import { DataSource } from 'typeorm'
-import UserEntity from '@core/user/domain/entities/user.entity'
-import { SearchUserUseCase } from '@core/user/application/use-case/search-user.use-case'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
+import { SearchAuthUseCase } from '@core/auth/application/use-case/search-auth.use-case'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 import { SearchDto } from '@core/@shared/application/dto/search.dto'
-import { UserFakerDatabuilder } from '@core/user/domain/entities/user.faker.databuilder'
+import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
 
 jest.setTimeout(10000) // 10 seconds
-describe('SearchUserUseCase', () => {
+describe('SearchAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
-  let repository: UserTypeOrmRepository<UserEntity>
+  let repository: AuthTypeOrmRepository<AuthEntity>
 
   beforeEach(async () => {
     notification = new Notification()
     dataSource = await TypeOrmFactory.getDataSourceInstance('.env.test')
-    repository = new UserTypeOrmRepository(dataSource, notification)
+    repository = new AuthTypeOrmRepository(dataSource, notification)
   })
 
-  it('Should search a valid User using filter', async () => {
-    const fakeData = new UserFakerDatabuilder().buildValid()
+  it('Should search a valid Auth using filter', async () => {
+    const fakeData = new AuthFakerDatabuilder().buildValid()
     const fieldName = fakeData.getRandomField()
     const expression = {}
     expression[fieldName.name] = { $ne: 'foo' }
@@ -39,7 +39,7 @@ describe('SearchUserUseCase', () => {
       })
     })
 
-    const useCase = new SearchUserUseCase(repository)
+    const useCase = new SearchAuthUseCase(repository)
     const found = await useCase.execute(searchInput)
     const dataReturned = {
       items: [fakeData],
@@ -59,14 +59,14 @@ describe('SearchUserUseCase', () => {
       filter: ['s']
     }
 
-    const useCase = new SearchUserUseCase(repository)
+    const useCase = new SearchAuthUseCase(repository)
     await expect(useCase.execute(searchInput)).rejects.toBeInstanceOf(
       NotificationError
     )
   })
 
   it('Should return a empty Search when not found', async () => {
-    const fakeData = new UserFakerDatabuilder().buildValid()
+    const fakeData = new AuthFakerDatabuilder().buildValid()
     const fieldName = fakeData.getRandomField()
     const expression = {}
     expression[fieldName.name] = { $eq: 'foo' }
@@ -84,7 +84,7 @@ describe('SearchUserUseCase', () => {
       })
     })
 
-    const useCase = new SearchUserUseCase(repository)
+    const useCase = new SearchAuthUseCase(repository)
     const found = await useCase.execute(searchInput)
     const dataReturned = {
       items: [],

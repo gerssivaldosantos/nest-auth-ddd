@@ -15,6 +15,11 @@ import { LogoutUseCase } from '@core/auth/application/use-case/logout.use-case'
 import { AccessTokenStrategy } from './strategies/accessToken.strategy'
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy'
 import { RefreshTokenUseCase } from '@core/auth/application/use-case/refresh-token.use-case'
+import { CreateAuthUseCase } from '@core/auth/application/use-case/create-auth.use-case'
+import { FindByIdAuthUseCase } from '@core/auth/application/use-case/findById-auth.use-case'
+import { SearchAuthUseCase } from '@core/auth/application/use-case/search-auth.use-case'
+import { UpdateAuthUseCase } from '@core/auth/application/use-case/update-auth.use-case'
+import { DeleteUserUseCase } from '@core/auth/application/use-case/delete-auth.use-case'
 
 @Module({
   imports: [
@@ -83,6 +88,46 @@ import { RefreshTokenUseCase } from '@core/auth/application/use-case/refresh-tok
         return new RefreshTokenUseCase(repo, jwtService, configService)
       },
       inject: [UserTypeOrmRepository, ConfigService, JwtService]
+    },
+    /* CreateUserUseCase */
+    {
+      provide: CreateAuthUseCase,
+      useFactory: async (repo: UserTypeOrmRepository<UserEntity>) => {
+        return new CreateAuthUseCase(repo)
+      },
+      inject: [UserTypeOrmRepository]
+    },
+    /* FindByIdUserUseCase */
+    {
+      provide: FindByIdAuthUseCase,
+      useFactory: async (repository: UserTypeOrmRepository<UserEntity>) => {
+        return new FindByIdAuthUseCase(repository)
+      },
+      inject: [UserTypeOrmRepository]
+    },
+    /* SearchUserUseCase */
+    {
+      provide: SearchAuthUseCase,
+      useFactory: async (repo: UserTypeOrmRepository<UserEntity>) => {
+        return new SearchAuthUseCase(repo)
+      },
+      inject: [UserTypeOrmRepository]
+    },
+    /* UpdateUserUseCase */
+    {
+      provide: UpdateAuthUseCase,
+      useFactory: async (repository: UserTypeOrmRepository<UserEntity>) => {
+        return new UpdateAuthUseCase(repository)
+      },
+      inject: [UserTypeOrmRepository]
+    },
+    /* DeleteUserUseCase */
+    {
+      provide: DeleteUserUseCase,
+      useFactory: async (repository: UserTypeOrmRepository<UserEntity>) => {
+        return new DeleteUserUseCase(repository)
+      },
+      inject: [UserTypeOrmRepository]
     }
   ]
 })

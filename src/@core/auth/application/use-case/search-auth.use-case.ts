@@ -1,13 +1,13 @@
 import { UseCase } from '@core/@shared/application/use-case/use-case'
-import UserEntity from '@core/user/domain/entities/user.entity'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { SearchParams } from '@core/@shared/domain/repository/search-params.repository'
 import { SearchResult } from '@core/@shared/domain/repository/search-result.repository'
 import { ParserCondition } from '@core/@shared/infra/db/typeorm/parser-condition'
 import { SearchDto } from '@core/@shared/application/dto/search.dto'
 
-export class SearchUserUseCase extends UseCase {
-  constructor(private repository: UserTypeOrmRepository<UserEntity>) {
+export class SearchAuthUseCase extends UseCase {
+  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
 

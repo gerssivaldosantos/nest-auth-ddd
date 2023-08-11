@@ -1,33 +1,33 @@
-import { DeleteUserUseCase } from '@core/user/application/use-case/delete-user.use-case'
+import { DeleteAuthUseCase } from '@core/auth/application/use-case/delete-auth.use-case'
 import { DataSource } from 'typeorm'
 import Notification from '@core/@shared/domain/notification/notification'
-import { UserTypeOrmRepository } from '@core/user/infra/db/typeorm/user.typeorm-repository'
+import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
-import UserEntity from '@core/user/domain/entities/user.entity'
+import AuthEntity from '@core/auth/domain/entities/auth.entity'
 
 jest.setTimeout(10000) // 10 seconds
-describe('DeleteUserUseCase', () => {
+describe('DeleteAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
-  let repository: UserTypeOrmRepository<UserEntity>
+  let repository: AuthTypeOrmRepository<AuthEntity>
 
   beforeEach(async () => {
     notification = new Notification()
     dataSource = await TypeOrmFactory.getDataSourceInstance('.env.test')
-    repository = new UserTypeOrmRepository(dataSource, notification)
+    repository = new AuthTypeOrmRepository(dataSource, notification)
   })
 
-  it('Should delete a valid User', async () => {
+  it('Should delete a valid Auth', async () => {
     jest.spyOn(repository, 'delete').mockImplementation((): Promise<any> => {
       return Promise.resolve(true)
     })
-    const useCase = new DeleteUserUseCase(repository)
+    const useCase = new DeleteAuthUseCase(repository)
     const result = await useCase.execute('1')
     expect(result).toEqual(true)
   })
 
   it('Should return an error when id is not provided', async () => {
-    const useCase = new DeleteUserUseCase(repository)
+    const useCase = new DeleteAuthUseCase(repository)
     await expect(useCase.execute(undefined)).rejects.toThrowError(
       'id is required'
     )
@@ -35,11 +35,11 @@ describe('DeleteUserUseCase', () => {
 
   it('Should return false when id is not found', async () => {
     jest
-      .spyOn(UserTypeOrmRepository.prototype, 'delete')
+      .spyOn(AuthTypeOrmRepository.prototype, 'delete')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve(false)
       })
-    const useCase = new DeleteUserUseCase(repository)
+    const useCase = new DeleteAuthUseCase(repository)
     const result = await useCase.execute('1')
     expect(result).toEqual(false)
   })

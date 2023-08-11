@@ -124,15 +124,28 @@ export class AuthTypeOrmEntitySchema {
   refreshToken: string
 
   @ApiProperty({
-    description: 'Data de Expiração do Token de Atualização',
+    description: 'Data de criação',
+    required: false
+  })
+  @Column({
+    type: process.env.DATABASE_TYPE === 'sqlite' ? 'datetime' : 'timestamp',
+    name: 'created_at',
+    nullable: false
+  })
+  @IsDateString()
+  @IsNotEmpty()
+  createdAt: Date
+
+  @ApiProperty({
+    description: 'Data de atualização',
     required: true
   })
   @Column({
     type: process.env.DATABASE_TYPE === 'sqlite' ? 'datetime' : 'timestamp',
-    name: 'refresh_token_expiration',
+    name: 'updated_at',
     nullable: true
   })
   @IsDateString()
   @IsOptional()
-  refreshTokenExpiration: Date
+  updatedAt: Date
 }

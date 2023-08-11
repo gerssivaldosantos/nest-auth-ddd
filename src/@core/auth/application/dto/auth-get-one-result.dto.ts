@@ -59,4 +59,14 @@ export class AuthGetOneResultDto {
   @IsDateString()
   @IsOptional()
   refreshTokenExpiration: string | null
+
+  @ApiProperty({ description: 'Data de criação' })
+  @IsDateString()
+  @IsNotEmpty({ message: 'Data de criação é obrigatório' })
+  createdAt: string
+
+  @ApiProperty({ description: 'Data de atualização' })
+  @IsDateString()
+  @IsOptional()
+  updatedAt: string | null
 }

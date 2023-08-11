@@ -23,16 +23,39 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsObject
 } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
 import { Entity } from '@core/@shared/domain/entity/entity'
-
+import { ApiProperty } from '@nestjs/swagger'
+import * as argon2 from 'argon2'
 export type AuthInput = {
+  id: string
+
+  name: string
+
   email: string
 
   password: string
+
+  refreshToken?: string
+
+  refreshTokenExpiration?: string
+
+  createdAt: string
+
+  updatedAt?: string
 }
 
 export default class AuthEntity extends Entity {
+  @ApiProperty({ description: 'ID' })
+  @IsUUID()
+  @IsOptional()
+  id: string
+
+  @ApiProperty({ description: 'Nome' })
+  @IsString()
+  @IsNotEmpty({ message: 'Nome é obrigatório' })
+  @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
+  name: string
+
   @ApiProperty({ description: 'E-mail' })
   @IsString()
   @IsNotEmpty({ message: 'E-mail é obrigatório' })
@@ -45,13 +68,41 @@ export default class AuthEntity extends Entity {
   @MaxLength(100, { message: 'Senha deve ter no máximo 100 caracteres' })
   password: string
 
+  @ApiProperty({ description: 'Token de Atualização' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(255, {
+    message: 'Token de Atualização deve ter no máximo 255 caracteres'
+  })
+  refreshToken: string | null
+
+  @ApiProperty({ description: 'Data de criação' })
+  @IsDateString()
+  @IsNotEmpty({ message: 'Data de criação é obrigatório' })
+  createdAt: string
+
+  @ApiProperty({ description: 'Data de atualização' })
+  @IsDateString()
+  @IsOptional()
+  updatedAt: string | null
+
   getPlainClass(): any {
     return AuthEntity
   }
 
+  async encryptPassword(): Promise<void> {
+    this.password = await argon2.hash(this.password)
+  }
+
   constructor(Auth: AuthInput, notification: NotificationInterface) {
-    super(notification, undefined)
+    super(notification, Auth?.id || null)
+    this.name = Auth.name
     this.email = Auth.email
     this.password = Auth.password
+    this.refreshToken = Auth?.refreshToken
+    this.createdAt = Auth.createdAt
+      ? this.dateToStringISO(Auth.createdAt)
+      : this.dateToStringISO(new Date())
+    this.updatedAt = this.dateToStringISO(new Date())
   }
 }

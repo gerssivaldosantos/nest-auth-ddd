@@ -5,14 +5,6 @@ import {
 
 export const fields: FieldDataFaker[] = [
   {
-    type: 'Uuid',
-    primary: true,
-    nullable: false,
-    description: 'ID',
-    dbname: 'id',
-    name: 'id'
-  },
-  {
     type: 'String',
     length: 100,
     nullable: false,
@@ -35,21 +27,6 @@ export const fields: FieldDataFaker[] = [
     description: 'Senha',
     dbname: 'password',
     name: 'password'
-  },
-  {
-    type: 'String',
-    length: 255,
-    nullable: true,
-    description: 'Token de Atualização',
-    dbname: 'refresh_token',
-    name: 'refreshToken'
-  },
-  {
-    type: 'Date',
-    nullable: true,
-    description: 'Data de Expiração do Token de Atualização',
-    dbname: 'refresh_token_expiration',
-    name: 'refreshTokenExpiration'
   }
 ]
 export class AuthFakerDatabuilder extends FakerDataBuilder {

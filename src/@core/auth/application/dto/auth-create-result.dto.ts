@@ -23,7 +23,7 @@ import {
 } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class UserCreateResultDto {
+export class AuthCreateResultDto {
   @ApiProperty({ description: 'ID' })
   @IsUUID()
   @IsOptional()
