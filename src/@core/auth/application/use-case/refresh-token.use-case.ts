@@ -10,7 +10,7 @@ import { SignInResultDto } from '@core/auth/application/dto/sign-in-result.dto'
 import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
 
 export class RefreshTokenUseCase extends UseCase {
-  constructor(
+  constructor (
     private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
@@ -18,26 +18,28 @@ export class RefreshTokenUseCase extends UseCase {
     super()
   }
 
-  async execute({
+  async execute ({
     id,
     refreshToken
   }): Promise<SignInResultDto | NotificationError> {
     const resultFindById = await this.repository.findById(id)
-    if (!resultFindById || !resultFindById.refreshToken)
+    if (!resultFindById || !resultFindById.refreshToken) {
       return Promise.reject(
         new NotificationError(
           'Refresh Token Inexistente',
           HttpErrorCode.FORBIDDEN
         )
       )
+    }
     const refreshTokenMatches = await argon2.verify(
       resultFindById.refreshToken,
       refreshToken
     )
-    if (!refreshTokenMatches)
+    if (!refreshTokenMatches) {
       return Promise.reject(
         new NotificationError('Refresh Token Inválido', HttpErrorCode.FORBIDDEN)
       )
+    }
     const [newAccessToken, newRefreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {

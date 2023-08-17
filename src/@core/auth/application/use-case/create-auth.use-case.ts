@@ -8,11 +8,11 @@ import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-
 import { HttpErrorCode } from '@core/@shared/application/dto/http.enum'
 
 export class CreateAuthUseCase extends UseCase {
-  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
+  constructor (private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
 
-  async execute(
+  async execute (
     data: AuthCreateDto
   ): Promise<AuthCreateResultDto | NotificationError> {
     const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(

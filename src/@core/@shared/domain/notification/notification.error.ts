@@ -1,26 +1,26 @@
 import { NotificationErrorOutput } from '@core/@shared/domain/notification/notification.interface'
 
 export default class NotificationError extends Error {
-  get errors(): Record<string, NotificationErrorOutput> {
+  get errors (): Record<string, NotificationErrorOutput> {
     return this._errors
   }
 
-  set errors(value: Record<string, NotificationErrorOutput>) {
+  set errors (value: Record<string, NotificationErrorOutput>) {
     this._errors = value
   }
 
-  get code(): number {
+  get code (): number {
     return this._code
   }
 
-  set code(value: number) {
+  set code (value: number) {
     this._code = value
   }
 
   private _code: number
   private _errors: Record<string, NotificationErrorOutput>
 
-  constructor(
+  constructor (
     message: string,
     code = 500,
     errors?: Record<string, NotificationErrorOutput>
@@ -31,10 +31,10 @@ export default class NotificationError extends Error {
     this.errors = errors
   }
 
-  public toJSON(): Record<
+  public toJSON (): Record<
     string,
     string | number | Record<string, NotificationErrorOutput>
-  > {
+    > {
     return {
       code: this.code,
       errors: this.errors,

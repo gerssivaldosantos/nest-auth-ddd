@@ -3,11 +3,11 @@ import { EntityInterface } from '@core/@shared/domain/entity/entity.interface'
 import { Entity } from '@core/@shared/domain/entity/entity'
 
 export abstract class Presenter {
-  static entityToData(entity: EntityInterface): any {
+  static entityToData (entity: EntityInterface): any {
     return entity.toJSON()
   }
 
-  static async dataToEntity<E extends Entity>(
+  static async dataToEntity<E extends Entity> (
     data: Record<string, any>,
     EntityClass: new (data?: any, notification?: any) => E
   ): Promise<E> {
@@ -17,7 +17,7 @@ export abstract class Presenter {
     return entity
   }
 
-  static flatObject(input, reference?, output?) {
+  static flatObject (input, reference?, output?) {
     output = output || {}
     for (let key in input) {
       const value = input[key]

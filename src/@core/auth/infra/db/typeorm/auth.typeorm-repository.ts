@@ -7,9 +7,8 @@ import { DataSource } from 'typeorm'
 
 export class AuthTypeOrmRepository<E extends AuthEntity>
   extends TypeOrmRepository<E>
-  implements AuthRepositoryInterface
-{
-  constructor(dataSources: DataSource, notification: NotificationInterface) {
+  implements AuthRepositoryInterface {
+  constructor (dataSources: DataSource, notification: NotificationInterface) {
     super(dataSources, notification, AuthTypeOrmEntitySchema, AuthEntity)
   }
 }

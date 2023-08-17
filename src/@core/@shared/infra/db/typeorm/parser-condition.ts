@@ -32,7 +32,7 @@ const OPERATORS = {
   $between: (values) => Between(values[0], values[1])
 }
 export class ParserCondition implements ParserConditionInterface {
-  parser(query: FilterCondition[] | FilterCondition) {
+  parser (query: FilterCondition[] | FilterCondition) {
     if (Array.isArray(query)) {
       return query.map((q) => this.parser(q))
     }

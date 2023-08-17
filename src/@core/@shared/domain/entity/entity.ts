@@ -15,12 +15,12 @@ export abstract class Entity implements EntityInterface {
 
   public notification: NotificationInterface
 
-  protected constructor(notification: NotificationInterface, id?: string) {
+  protected constructor (notification: NotificationInterface, id?: string) {
     this.notification = notification
     this.id = id || uuidv4()
   }
 
-  public getFilledProperties(): string[] {
+  public getFilledProperties (): string[] {
     const json = this.toJSON()
     delete json.id
     return Object.entries(json)
@@ -31,22 +31,22 @@ export abstract class Entity implements EntityInterface {
       .map(([key]) => key)
   }
 
-  public getPlainClass(): any {
+  public getPlainClass (): any {
     throw new Error('Method "getPlainClass" was not implemented')
   }
 
-  public getName() {
+  public getName () {
     /**
      * Está sendo usado um replace no caso raro aonde o nome da classe estava voltando com um "_" no começo,
      * por exemplo, "_UserEntity" ao invés de "UserEntity"
      */
-    return (<any>this).constructor.name.replace('_', '')
+    return (<any> this).constructor.name.replace('_', '')
   }
 
   /**
    * Apply validations rules based on class-validator decorators
    */
-  public async validate() {
+  public async validate () {
     const result = await validate(this)
     for (const error of result) {
       for (const key in error.constraints) {
@@ -73,7 +73,7 @@ export abstract class Entity implements EntityInterface {
   /**
    * Returns a JSON representation of entity object
    */
-  toJSON() {
+  toJSON () {
     const proto = Object.getPrototypeOf(this)
     const jsonObj: any = Object.assign({}, this)
 
@@ -95,7 +95,7 @@ export abstract class Entity implements EntityInterface {
   /**
    * Returns an object with all property without methods
    */
-  toOutput() {
+  toOutput () {
     const output = this.toJSON()
     for (const [key, value] of Object.entries(output)) {
       output[key] = { value }
@@ -106,7 +106,7 @@ export abstract class Entity implements EntityInterface {
   /*
       Convert Date to string without timezone to ISO format
        */
-  public dateToStringISO(date: Date | string): string {
+  public dateToStringISO (date: Date | string): string {
     // Extract data components
     if (typeof date === 'string' || !(date instanceof Date)) {
       return date // .replace(/(?<=\d)T|(?<=\d)Z/g, ' ').trim()

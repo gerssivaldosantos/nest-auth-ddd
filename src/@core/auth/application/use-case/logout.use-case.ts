@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt'
 import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
 
 export class LogoutUseCase extends UseCase {
-  constructor(
+  constructor (
     private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
@@ -16,7 +16,7 @@ export class LogoutUseCase extends UseCase {
     super()
   }
 
-  async execute(id: string): Promise<boolean | NotificationError> {
+  async execute (id: string): Promise<boolean | NotificationError> {
     const resultFindByEmail = await this.repository.findById(id)
     if (!resultFindByEmail) {
       return Promise.reject(

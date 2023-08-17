@@ -17,7 +17,7 @@ export class SearchResult<E extends Entity = Entity> {
   readonly lastPage: number
   readonly sort: SortParam
 
-  constructor(props: SearchResultProps<E>) {
+  constructor (props: SearchResultProps<E>) {
     this.items = props.items
     this.total = props.total
     this.currentPage = props.currentPage

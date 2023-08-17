@@ -4,7 +4,7 @@ import NotificationError from '@core/@shared/domain/notification/notification.er
 
 @Catch(NotificationError)
 export class NotificationErrorExceptionFilter implements ExceptionFilter {
-  catch(notificationError: NotificationError, host: ArgumentsHost) {
+  catch (notificationError: NotificationError, host: ArgumentsHost) {
     host
       .switchToHttp()
       .getResponse<Response>()

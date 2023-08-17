@@ -14,7 +14,7 @@ import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
 import SignInEntity from '@core/auth/domain/entities/sign-in.entity'
 
 export class SignInUseCase extends UseCase {
-  constructor(
+  constructor (
     private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
@@ -22,7 +22,7 @@ export class SignInUseCase extends UseCase {
     super()
   }
 
-  async execute(data: SignInDTO): Promise<SignInResultDto | NotificationError> {
+  async execute (data: SignInDTO): Promise<SignInResultDto | NotificationError> {
     const entity: SignInEntity = await AuthPresenter.dataToEntity<SignInEntity>(
       data,
       SignInEntity
@@ -45,7 +45,7 @@ export class SignInUseCase extends UseCase {
             filter: [{ email: data.email }]
           },
           {
-            parser(filter: FilterCondition): FilterCondition {
+            parser (filter: FilterCondition): FilterCondition {
               return filter
             }
           }

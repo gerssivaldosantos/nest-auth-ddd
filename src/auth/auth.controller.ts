@@ -22,7 +22,7 @@ import {
   ApiTags
 } from '@nestjs/swagger'
 import { SignUpResultDto } from '@core/auth/application/dto/sign-up-result.dto'
-import { NotificationErrorExceptionFilter } from '../exceptionFilter'
+import { NotificationErrorExceptionFilter } from '@/exceptionFilter'
 import { SignInResultDto } from '@core/auth/application/dto/sign-in-result.dto'
 import { SignInDTO } from '@core/auth/application/dto/sign-in.dto'
 import { SignInUseCase } from '@core/auth/application/use-case/sign-in.use-case'
@@ -47,7 +47,7 @@ import { SearchResultDto } from '@core/@shared/application/dto/search-result.dto
 @UseFilters(NotificationErrorExceptionFilter)
 @Controller('auth')
 export class AuthController {
-  constructor(
+  constructor (
     private signUpUseCase: SignUpUseCase,
     private signInUseCase: SignInUseCase,
     private logoutUseCase: LogoutUseCase,
@@ -77,7 +77,7 @@ export class AuthController {
   @ApiResponse({ type: () => SignUpResultDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
-  signUp(@Body() data: SignUpDTO) {
+  signUp (@Body() data: SignUpDTO) {
     return this.signUpUseCase.execute(data)
   }
 
@@ -98,7 +98,7 @@ export class AuthController {
   @ApiResponse({ type: () => SignInResultDto })
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-in')
-  signIn(@Body() data: SignInDTO) {
+  signIn (@Body() data: SignInDTO) {
     return this.signInUseCase.execute(data)
   }
 
@@ -107,7 +107,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @Get('logout')
-  logout(@AuthUser('sub') sub: string) {
+  logout (@AuthUser('sub') sub: string) {
     return this.logoutUseCase.execute(sub)
   }
 
@@ -116,7 +116,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  refreshTokens(
+  refreshTokens (
     @AuthUser('sub') sub: string,
     @AuthUser('refreshToken') refreshToken: string
   ) {
@@ -131,7 +131,7 @@ export class AuthController {
   @ApiResponse({ type: () => AuthCreateResultDto })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  create(@Body() createAuthDto: AuthCreateDto) {
+  create (@Body() createAuthDto: AuthCreateDto) {
     return this.insertAuthUseCase.execute(createAuthDto)
   }
 
@@ -143,7 +143,7 @@ export class AuthController {
   @ApiResponse({ type: () => AuthUpdateDto })
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateDto: AuthUpdateDto) {
+  async update (@Param('id') id: string, @Body() updateDto: AuthUpdateDto) {
     const changeToData = { ...updateDto, id }
     return await this.updateAuthUseCase.execute(changeToData)
   }
@@ -155,7 +155,7 @@ export class AuthController {
   @ApiResponse({ type: () => Boolean })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete (@Param('id') id: string) {
     const result = await this.deleteAuthUseCase.execute(id)
     if (!result) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND)
@@ -166,7 +166,7 @@ export class AuthController {
   @ApiResponse({ type: () => AuthGetOneResultDto })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById (@Param('id') id: string) {
     return await this.findByIdAuthUsecase.execute(id)
   }
 
@@ -178,7 +178,7 @@ export class AuthController {
   @ApiResponse({ type: () => SearchResultDto })
   @HttpCode(HttpStatus.OK)
   @Post('search')
-  async search(@Body() searchAuthDto: AuthSearchDto) {
+  async search (@Body() searchAuthDto: AuthSearchDto) {
     try {
       return await this.searchAuthUseCase.execute(searchAuthDto)
     } catch (e) {

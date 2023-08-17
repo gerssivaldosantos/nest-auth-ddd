@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { applyGlobalConfig } from './global-config'
 
 class Bootstrap {
-  static async load() {
+  static async load () {
     const { AppModule } = await import('./app.module')
     const app = await NestFactory.create(AppModule)
     const configService: ConfigService = app.get(ConfigService)

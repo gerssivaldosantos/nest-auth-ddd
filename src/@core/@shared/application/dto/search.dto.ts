@@ -4,10 +4,10 @@ import { IsArray, IsNumber, IsOptional } from 'class-validator'
 
 export class Sort {
   @ApiProperty({ description: 'Field to be ordered', example: 'name' })
-  fieldName: string
+    fieldName: string
 
   @ApiProperty({ description: 'Order to be applying', example: 'asc' })
-  order: string
+    order: string
 }
 
 export class SearchDto {
@@ -19,7 +19,7 @@ export class SearchDto {
   })
   @IsNumber()
   @IsOptional()
-  page?: number | null
+    page?: number | null
 
   @ApiProperty({
     description: 'Number of records per page',
@@ -29,7 +29,7 @@ export class SearchDto {
   })
   @IsNumber()
   @IsOptional()
-  perPage?: number | null
+    perPage?: number | null
 
   @ApiProperty({
     description: 'Field to be  sorted and direction',
@@ -38,7 +38,7 @@ export class SearchDto {
     example: { name: 'asc' }
   })
   @IsOptional()
-  sort?: SortParam
+    sort?: SortParam
 
   @ApiProperty({
     description: 'Filter condition to apply',
@@ -48,7 +48,7 @@ export class SearchDto {
   })
   @IsOptional()
   @IsArray()
-  filter?: FilterCondition
+    filter?: FilterCondition
 
   @ApiProperty({
     description: 'Attributes to be included in the response',
@@ -57,5 +57,5 @@ export class SearchDto {
     example: ['id', 'name', 'email']
   })
   @IsOptional()
-  attributes?: string[]
+    attributes?: string[]
 }

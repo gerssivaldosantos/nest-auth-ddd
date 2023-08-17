@@ -37,23 +37,23 @@ export default class SignInEntity extends Entity {
   @IsString()
   @IsNotEmpty({ message: 'E-mail é obrigatório' })
   @MaxLength(100, { message: 'E-mail deve ter no máximo 100 caracteres' })
-  email: string
+    email: string
 
   @ApiProperty({ description: 'Senha' })
   @IsString()
   @IsNotEmpty({ message: 'Senha é obrigatório' })
   @MaxLength(100, { message: 'Senha deve ter no máximo 100 caracteres' })
-  password: string
+    password: string
 
-  getPlainClass(): any {
+  getPlainClass (): any {
     return SignInEntity
   }
 
-  async encryptPassword(): Promise<void> {
+  async encryptPassword (): Promise<void> {
     this.password = await argon2.hash(this.password)
   }
 
-  constructor(SignIn: SignInInput, notification: NotificationInterface) {
+  constructor (SignIn: SignInInput, notification: NotificationInterface) {
     super(notification, SignIn?.id || null)
     this.email = SignIn.email
     this.password = SignIn.password

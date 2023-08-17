@@ -28,11 +28,11 @@ export class SignInDTO {
   @IsString()
   @IsNotEmpty({ message: 'E-mail é obrigatório' })
   @MaxLength(100, { message: 'E-mail deve ter no máximo 100 caracteres' })
-  email: string
+    email: string
 
   @ApiProperty({ description: 'Senha' })
   @IsString()
   @IsNotEmpty({ message: 'Senha é obrigatório' })
   @MaxLength(100, { message: 'Senha deve ter no máximo 100 caracteres' })
-  password: string
+    password: string
 }

@@ -4,11 +4,11 @@ import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-
 import { EntityInterface } from '@core/@shared/domain/entity/entity.interface'
 
 export class FindByIdAuthUseCase extends UseCase {
-  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
+  constructor (private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
 
-  async execute(id: string): Promise<EntityInterface | null> {
+  async execute (id: string): Promise<EntityInterface | null> {
     return this.repository.findById(id)
   }
 }

@@ -14,7 +14,7 @@ export class SearchParams<FilterCondition> {
   private _attributes: string[]
   ignorePaging: boolean
 
-  constructor(
+  constructor (
     props: SearchProps<FilterCondition>,
     private filterParser: ParserConditionInterface
   ) {
@@ -29,11 +29,11 @@ export class SearchParams<FilterCondition> {
     }
   }
 
-  get page() {
+  get page () {
     return this._page
   }
 
-  private set page(value: number) {
+  private set page (value: number) {
     let _page = +value
 
     if (Number.isNaN(_page) || _page <= 0 || parseInt(_page as any) !== _page) {
@@ -43,11 +43,11 @@ export class SearchParams<FilterCondition> {
     this._page = !this.ignorePaging ? _page : undefined
   }
 
-  get perPage() {
+  get perPage () {
     return this._perPage
   }
 
-  private set perPage(value: number) {
+  private set perPage (value: number) {
     let _perPage = value === (true as any) ? this._perPage : +value
 
     if (
@@ -61,19 +61,19 @@ export class SearchParams<FilterCondition> {
     this._perPage = !this.ignorePaging ? _perPage : undefined
   }
 
-  get sort(): SortParam {
+  get sort (): SortParam {
     return this._sort
   }
 
-  private set sort(value: SortParam) {
+  private set sort (value: SortParam) {
     this._sort = value === null || value === undefined ? null : value
   }
 
-  get filter(): any {
+  get filter (): any {
     return this._filter
   }
 
-  private set filter(value: FilterCondition) {
+  private set filter (value: FilterCondition) {
     if (value) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -81,21 +81,21 @@ export class SearchParams<FilterCondition> {
     }
   }
 
-  get include(): includeConfig[] {
+  get include (): includeConfig[] {
     return this._include
   }
 
-  private set include(value: includeConfig[]) {
+  private set include (value: includeConfig[]) {
     if (Array.isArray(value)) {
       this._include = value
     }
   }
 
-  get attributes(): string[] {
+  get attributes (): string[] {
     return this._attributes
   }
 
-  set attributes(value: string[]) {
+  set attributes (value: string[]) {
     this._attributes = value
   }
 }

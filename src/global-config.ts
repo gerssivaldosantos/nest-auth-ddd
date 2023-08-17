@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config'
 import validationOptions from './utils/validation-options'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
-export function applyGlobalConfig(app: INestApplication) {
+export function applyGlobalConfig (app: INestApplication) {
   const configService: ConfigService = app.get(ConfigService)
   app.enableCors({
     origin: configService.get('ALLOW_ORIGIN')

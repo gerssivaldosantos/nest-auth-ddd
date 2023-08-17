@@ -97,7 +97,8 @@ describe('Auth Repository', () => {
     )
     await repository.insert(entity2)
     for (const fieldName of fieldNames) {
-      entity2[fieldName] = entity[fieldName]
+      const builderToUpdate = new AuthFakerDatabuilder().buildValid()
+      entity2[fieldName] = builderToUpdate[fieldName]
       const updated: any = await repository.update(entity2)
       expect(updated[fieldName]).toEqual(entity2[fieldName])
       expect(updated.id).toEqual(entity2.id)

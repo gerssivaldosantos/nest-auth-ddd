@@ -9,7 +9,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh'
 ) {
-  constructor(configService: ConfigService) {
+  constructor (configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get<string>('REFRESH_TOKEN_SECRET'),
@@ -17,7 +17,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     })
   }
 
-  validate(req: Request, payload: any) {
+  validate (req: Request, payload: any) {
     const refreshToken = req.get('Authorization').replace('Bearer', '').trim()
     return { ...payload, refreshToken }
   }

@@ -5,20 +5,20 @@ import { IsArray } from 'class-validator'
 export class SearchResultDto {
   @ApiProperty({ description: 'Search results items', type: [] })
   @IsArray()
-  items: []
+    items: []
 
   @ApiProperty({ description: 'Total of items', type: 'number' })
-  total: number
+    total: number
 
   @ApiProperty({ description: 'Current page', type: 'number' })
-  currentPage: number
+    currentPage: number
 
   @ApiProperty({ description: 'Items per page', type: 'number' })
-  perPage: number
+    perPage: number
 
   @ApiProperty({ description: 'Last page', type: 'number' })
-  lastPage: number
+    lastPage: number
 
   @ApiProperty({ description: 'Sort param', type: Object })
-  sort: SortParam
+    sort: SortParam
 }
