@@ -60,7 +60,7 @@ export class TypeOrmRepository<E extends Entity> implements RepositoryInterface<
     }
   }
 
-  async search (props: SearchParams<FilterCondition>): Promise<SearchResult> {
+  async search<E extends Entity> (props: SearchParams<FilterCondition>): Promise<SearchResult<E>> {
     try {
       const found = await this.repo.findAndCount({
         where: props.filter,
