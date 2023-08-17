@@ -6,8 +6,8 @@ import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-
 import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
+import { describe, it, beforeEach, expect, vi } from 'vitest'
 
-jest.setTimeout(10000) // 10 seconds
 describe('UpdateAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
@@ -21,7 +21,7 @@ describe('UpdateAuthUseCase', () => {
 
   it('Should update an Auth', async () => {
     const inputData = new AuthFakerDatabuilder().buildValid()
-    jest.spyOn(repository, 'update').mockImplementation((): Promise<any> => {
+    vi.spyOn(repository, 'update').mockImplementation((): Promise<any> => {
       const entity = new AuthEntity(inputData, notification)
       return Promise.resolve(entity)
     })

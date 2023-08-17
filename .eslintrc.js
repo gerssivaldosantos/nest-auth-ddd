@@ -7,12 +7,11 @@ module.exports = {
   plugins: ["@typescript-eslint/eslint-plugin"],
   extends: [
     "plugin:@typescript-eslint/recommended",
-    "prettier-standard"
+    "standard"
   ],
   root: true,
   env: {
-    node: true,
-    jest: true,
+    node: true
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {

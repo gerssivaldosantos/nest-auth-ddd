@@ -28,6 +28,7 @@ import fileConfig from '../config/file.config'
 import { createAuthRelations } from '@core/auth/domain/repository/auth.test.helper'
 import { FieldDataFaker } from '@core/@shared/domain/tests/faker.databuilder'
 import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
+import { describe, it, afterEach, beforeEach, expect, vi } from 'vitest'
 
 describe('AuthController', () => {
   let controller: AuthController
@@ -109,8 +110,8 @@ describe('AuthController', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
-    jest.restoreAllMocks()
+    vi.clearAllMocks()
+    vi.restoreAllMocks()
   })
 
   it('Should be defined', () => {
@@ -122,12 +123,8 @@ describe('AuthController', () => {
       const inputData: AuthCreateDto = {
         ...new AuthFakerDatabuilder().buildValid()
       }
-      const useCaseResult: AuthCreateResultDto = {
-        ...inputData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-      jest
+      const useCaseResult: AuthCreateResultDto = { ...inputData }
+      vi
         .spyOn(CreateAuthUseCase.prototype, 'execute')
         .mockResolvedValue(useCaseResult)
       const inserted = await controller.create(inputData)
@@ -141,7 +138,7 @@ describe('AuthController', () => {
       const inputData: AuthCreateDto = {
         ...inpuInvalid
       }
-      jest
+      vi
         .spyOn(CreateAuthUseCase.prototype, 'execute')
         .mockRejectedValue(new NotificationError('Error'))
       await expect(controller.create(inputData)).rejects.toThrowError(
@@ -154,16 +151,13 @@ describe('AuthController', () => {
     it('Should update a valid Auth ', async () => {
       const inputData = new AuthFakerDatabuilder().buildValid()
       const relations = await createAuthRelations(dataSource)
-      const entity = new AuthEntity(
-        { ...inputData, ...relations },
-        notification
-      )
+      const entity = new AuthEntity({ ...inputData, ...relations }, notification)
       const repository = new AuthTypeOrmRepository(dataSource, notification)
       await repository.insert(entity)
       const fieldName = inputData.getRandomField()
       inputData.setValidField(fieldName)
       const useCaseResult: AuthUpdateResultDto = { ...inputData }
-      jest
+      vi
         .spyOn(UpdateAuthUseCase.prototype, 'execute')
         .mockResolvedValue(useCaseResult)
       const updated = await controller.update('1', inputData)
@@ -177,7 +171,7 @@ describe('AuthController', () => {
       const inputData: AuthCreateDto = {
         ...inpuInvalid
       }
-      jest
+      vi
         .spyOn(UpdateAuthUseCase.prototype, 'execute')
         .mockRejectedValue(new NotificationError('Error'))
       await expect(controller.update('233', inputData)).rejects.toThrowError(
@@ -189,13 +183,7 @@ describe('AuthController', () => {
   describe('SEARCH', () => {
     it('Should search a Auth', async () => {
       const fakeData = new AuthFakerDatabuilder().buildValid()
-      const fieldName: FieldDataFaker = fakeData.getRandomField([
-        'updatedAt',
-        'createdAt',
-        'password',
-        'refreshToken',
-        'refreshTokenExpiration'
-      ])
+      const fieldName: FieldDataFaker = fakeData.getRandomField([])
       const expression = {}
       expression[fieldName.name] = {
         $eq: fakeData[fieldName.name]

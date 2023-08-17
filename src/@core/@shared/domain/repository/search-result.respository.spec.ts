@@ -1,5 +1,5 @@
 import { SearchResult } from '@core/@shared/domain/repository/search-result.repository'
-
+import { describe, it, expect } from 'vitest'
 describe('SearchResult Unit Tests', () => {
   it('should set lastPage = 1 when perPage field is greater than total field', () => {
     const result = new SearchResult({

@@ -2,6 +2,7 @@ import AuthEntity from './auth.entity'
 import Notification from '../../../@shared/domain/notification/notification'
 import NotificationInterface from '@core/@shared/domain/notification/notification.interface'
 import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
+import { describe, it, beforeEach, expect } from 'vitest'
 
 let notification: NotificationInterface
 const builder = new AuthFakerDatabuilder()
@@ -35,8 +36,7 @@ describe('AuthEntity', () => {
   it('Should return an notification error when a field is invalid', async () => {
     const fieldsToIgnore = []
     const propertiesKeys = Object.keys(builder.buildValid()).filter(
-      (key) => !fieldsToIgnore.includes(key)
-    )
+      (key) => !fieldsToIgnore.includes(key))
     for (const key of propertiesKeys) {
       const notification = new Notification()
       const inputInvalidData = builder.buildInValid([key])

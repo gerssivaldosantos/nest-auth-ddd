@@ -4,8 +4,8 @@ import Notification from '@core/@shared/domain/notification/notification'
 import { AuthTypeOrmRepository } from '@core/auth/infra/db/typeorm/auth.typeorm-repository'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
 import AuthEntity from '@core/auth/domain/entities/auth.entity'
+import { describe, it, beforeEach, expect, vi } from 'vitest'
 
-jest.setTimeout(10000) // 10 seconds
 describe('DeleteAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
@@ -18,7 +18,7 @@ describe('DeleteAuthUseCase', () => {
   })
 
   it('Should delete a valid Auth', async () => {
-    jest.spyOn(repository, 'delete').mockImplementation((): Promise<any> => {
+    vi.spyOn(repository, 'delete').mockImplementation((): Promise<any> => {
       return Promise.resolve(true)
     })
     const useCase = new DeleteAuthUseCase(repository)
@@ -34,7 +34,7 @@ describe('DeleteAuthUseCase', () => {
   })
 
   it('Should return false when id is not found', async () => {
-    jest
+    vi
       .spyOn(AuthTypeOrmRepository.prototype, 'delete')
       .mockImplementation((): Promise<any> => {
         return Promise.resolve(false)

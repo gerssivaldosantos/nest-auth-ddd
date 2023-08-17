@@ -5,14 +5,9 @@ import NotificationError from '@core/@shared/domain/notification/notification.er
 import { Entity } from '@core/@shared/domain/entity/entity'
 import { FilterCondition } from '@core/@shared/infra/types'
 import { RepositoryInterface } from '@core/@shared/domain/repository/repository.interface'
-import {
-  SearchResult,
-  SearchResultProps
-} from '@core/@shared/domain/repository/search-result.repository'
+import { SearchResult, SearchResultProps } from '@core/@shared/domain/repository/search-result.repository'
 
-export class TypeOrmRepository<E extends Entity>
-  implements RepositoryInterface<Entity>
-{
+export class TypeOrmRepository<E extends Entity> implements RepositoryInterface<Entity> {
   repo
   notification: NotificationInterface
   EntityClass: new (...args: any[]) => any
@@ -24,18 +19,16 @@ export class TypeOrmRepository<E extends Entity>
     @params entitySchema The typeorm schema of the entity
      */
 
-  constructor(
+  constructor (
     private dataSource: DataSource,
     notification: NotificationInterface,
-    entitySchema: any,
-    EntityClass: new (...args: any[]) => any
-  ) {
+    entitySchema: any, EntityClass: new (...args: any[]) => any) {
     this.EntityClass = EntityClass
     this.repo = this.dataSource.getRepository(entitySchema)
     this.notification = notification
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete (id: string): Promise<boolean> {
     if (!id || id === '') {
       throw new NotificationError('id is required')
     }
@@ -43,7 +36,7 @@ export class TypeOrmRepository<E extends Entity>
     return deleted.affected > 0
   }
 
-  async findById(id: string | number): Promise<any> {
+  async findById (id: string | number): Promise<any> {
     const found = await this.repo.find({ where: { id } })
     if (!found[0]) {
       this.notification.addError({
@@ -57,7 +50,7 @@ export class TypeOrmRepository<E extends Entity>
     return new this.EntityClass(found[0], this.notification)
   }
 
-  async insert(entity: E): Promise<E> {
+  async insert (entity: E): Promise<E> {
     // ATTENTION: Always validate the entity before inserting it
     await entity.validate()
     if (!entity.notification.hasError()) {
@@ -67,7 +60,7 @@ export class TypeOrmRepository<E extends Entity>
     }
   }
 
-  async search(props: SearchParams<FilterCondition>): Promise<SearchResult<E>> {
+  async search (props: SearchParams<FilterCondition>): Promise<SearchResult> {
     try {
       const found = await this.repo.findAndCount({
         where: props.filter,
@@ -117,11 +110,11 @@ export class TypeOrmRepository<E extends Entity>
     }
   }
 
-  async executeSQL(sql: string): Promise<any> {
+  async executeSQL (sql: string): Promise<any> {
     return this.dataSource.manager.query(sql)
   }
 
-  async update(entity: E): Promise<E> {
+  async update (entity: E): Promise<E> {
     // ATTENTION: Always validate the entity before updating it
     await entity.validate()
     if (!entity.notification.hasError()) {

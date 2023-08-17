@@ -3,51 +3,51 @@ import Notification from '@core/@shared/domain/notification/notification'
 import { Entity } from '@core/@shared/domain/entity/entity'
 import { MinLength } from 'class-validator'
 import { UseCaseOutputInterface } from '@core/@shared/application/use-case/use-case.interface'
-
+import { describe, expect, it } from 'vitest'
 describe('Base UseCase', () => {
-  test('should create an instance of UseCase', () => {
+  it('should create an instance of UseCase', () => {
     class TestUseCase extends UseCase {}
     const testBaseUseCase = new TestUseCase()
     expect(testBaseUseCase).toBeInstanceOf(TestUseCase)
   })
 
-  test('should return an error if class does not implement an execute method', () => {
+  it('should return an error if class does not implement an execute method', () => {
     class TestUseCase extends UseCase {}
     const testBaseUseCase = new TestUseCase()
     expect(testBaseUseCase.execute()).rejects.toThrow('Not implemented')
   })
 
-  test('should return a object with validations', async () => {
+  it('should return a object with validations', async () => {
     class TestEntity1 extends Entity {
       @MinLength(10)
-      id: string
+        id: string
 
       @MinLength(10)
-      name: string
+        name: string
 
-      constructor(id: string, name: string) {
+      constructor (id: string, name: string) {
         const notification = new Notification()
         super(notification)
         this.id = id
         this.name = name
       }
 
-      getPlainClass(): any {
+      getPlainClass (): any {
         return TestEntity1
       }
     }
     class TestEntity2 extends Entity {
       @MinLength(10)
-      id: string
+        id: string
 
       @MinLength(10)
-      name: string
+        name: string
 
-      getPlainClass(): any {
+      getPlainClass (): any {
         return TestEntity2
       }
 
-      constructor(id: string, name: string) {
+      constructor (id: string, name: string) {
         const notification = new Notification()
         super(notification)
         this.id = id
@@ -87,7 +87,7 @@ describe('Base UseCase', () => {
       }
     }
     class TestUseCase extends UseCase {
-      async execute(arg?: any): Promise<UseCaseOutputInterface | any> {
+      async execute (arg?: any): Promise<UseCaseOutputInterface | any> {
         const testEntity1 = new TestEntity1(arg.id.value, arg.name.value)
         const testEntity2 = new TestEntity2(
           arg.group.id.value,
@@ -107,7 +107,7 @@ describe('Base UseCase', () => {
     expect(output).toMatchObject(resultExpectedOutput)
   })
 
-  test('should return invalid = false if input data has invalid = true', () => {
+  it('should return invalid = false if input data has invalid = true', () => {
     const inputData = {
       id: { value: 1, invalid: true }
     }
@@ -116,7 +116,7 @@ describe('Base UseCase', () => {
     })
   })
 
-  test('should return context = "" if input data has context <> ""', () => {
+  it('should return context = "" if input data has context <> ""', () => {
     const inputData = {
       id: { value: 1, context: 'teste' }
     }
@@ -125,7 +125,7 @@ describe('Base UseCase', () => {
     })
   })
 
-  test('should return messages = "" if input data has messages <> ""', () => {
+  it('should return messages = "" if input data has messages <> ""', () => {
     const inputData = {
       id: { value: 1, messages: 'teste' }
     }

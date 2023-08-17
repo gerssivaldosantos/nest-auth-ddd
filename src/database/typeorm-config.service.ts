@@ -6,9 +6,9 @@ import { AuthTypeOrmEntitySchema } from '@core/auth/infra/db/typeorm/auth.typeor
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  constructor(private configService: ConfigService) {}
+  constructor (private configService: ConfigService) {}
 
-  createTypeOrmOptions(): TypeOrmModuleOptions {
+  createTypeOrmOptions (): TypeOrmModuleOptions {
     return {
       type: this.configService.get('database.type'),
       url: this.configService.get('database.url'),
@@ -21,7 +21,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       dropSchema: false,
       keepConnectionAlive: true,
       logging: this.configService.get('app.nodeEnv') !== 'production',
-      entities: [AuthTypeOrmEntitySchema],
+      entities: [
+        AuthTypeOrmEntitySchema,
+
+      ],
       subscribers: [join(__dirname, '/../**/*.event-subscribe{.ts,.js}')],
       migrations: [join(__dirname, '/migrations/**/*{.ts,.js}')],
       seeds: [join(__dirname, '/seeds/**/*{.ts,.js}')],

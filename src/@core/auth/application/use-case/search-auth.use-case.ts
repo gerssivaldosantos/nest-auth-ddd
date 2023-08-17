@@ -7,18 +7,18 @@ import { ParserCondition } from '@core/@shared/infra/db/typeorm/parser-condition
 import { SearchDto } from '@core/@shared/application/dto/search.dto'
 
 export class SearchAuthUseCase extends UseCase {
-  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
+  constructor (private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
 
-  async execute(data: SearchDto): Promise<SearchResult> {
-    const searchParams = new SearchParams(
-      {
-        ...data,
-        include: []
-      },
-      new ParserCondition()
-    )
+  async execute (data: SearchDto): Promise<SearchResult> {
+    const searchParams = new SearchParams({
+      ...data,
+      include: [/*
+        { entity: 'role', attributes: ['id'] },
+        { entity: 'authRole', attributes: ['id'] },
+      */]
+    }, new ParserCondition())
     return await this.repository.search(searchParams)
   }
 }

@@ -2,6 +2,7 @@ import { TypeOrmConfigService } from './typeorm-config.service'
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import databaseConfig from '../config/database.config'
+import { describe, it, beforeEach, expect } from 'vitest'
 
 let config: ConfigService
 

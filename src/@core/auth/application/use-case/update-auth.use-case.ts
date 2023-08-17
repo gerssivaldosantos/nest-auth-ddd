@@ -7,14 +7,14 @@ import { UseCase } from '@core/@shared/application/use-case/use-case'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 
 export class UpdateAuthUseCase extends UseCase {
-  constructor(private repository: AuthTypeOrmRepository<AuthEntity>) {
+  constructor (private repository: AuthTypeOrmRepository<AuthEntity>) {
     super()
   }
 
-  async execute(
+  async execute (
     data: AuthUpdateDto
   ): Promise<AuthUpdateResultDto | NotificationError> {
-    const dataWithDate = { ...data, updatedAt: new Date().toISOString() }
+    const dataWithDate = { ...data }
     const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(
       dataWithDate,
       AuthEntity

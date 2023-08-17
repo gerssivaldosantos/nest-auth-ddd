@@ -10,7 +10,7 @@ import {
   MinLength
 } from 'class-validator'
 import NotificationInterface from '@core/@shared/domain/notification/notification.interface'
-
+import { describe, it, expect } from 'vitest'
 export class TestPresenter extends Presenter {}
 
 export type TestInput = {
@@ -29,7 +29,7 @@ export class TestEntity extends Entity {
   @MinLength(3, {
     message: 'Nome deve ter pelo menos 3 letras'
   })
-  name: string
+    name: string
 
   @IsEmail(
     {},
@@ -38,13 +38,13 @@ export class TestEntity extends Entity {
     }
   )
   @IsOptional()
-  email: string | null
+    email: string | null
 
-  getPlainClass(): any {
+  getPlainClass (): any {
     return TestEntity
   }
 
-  constructor(test: TestInput, notification: NotificationInterface) {
+  constructor (test: TestInput, notification: NotificationInterface) {
     super(notification, test?.id || null)
     this.name = test?.name
     this.email = test?.email

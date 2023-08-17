@@ -13,7 +13,7 @@ import { SignUpDTO } from '@core/auth/application/dto/sign-up.dto'
 import { SignUpResultDto } from '@core/auth/application/dto/sign-up-result.dto'
 
 export class SignUpUseCase extends UseCase {
-  constructor(
+  constructor (
     private repository: AuthTypeOrmRepository<AuthEntity>,
     private jwtService: JwtService,
     private configService: ConfigService
@@ -21,7 +21,7 @@ export class SignUpUseCase extends UseCase {
     super()
   }
 
-  async execute(data: SignUpDTO): Promise<SignUpResultDto | NotificationError> {
+  async execute (data: SignUpDTO): Promise<SignUpResultDto | NotificationError> {
     const entity: AuthEntity = await AuthPresenter.dataToEntity<AuthEntity>(
       data,
       AuthEntity
@@ -42,7 +42,7 @@ export class SignUpUseCase extends UseCase {
             filter: [{ email: data.email }]
           },
           {
-            parser(filter: FilterCondition): FilterCondition {
+            parser (filter: FilterCondition): FilterCondition {
               return filter
             }
           }

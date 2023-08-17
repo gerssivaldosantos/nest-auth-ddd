@@ -13,10 +13,12 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   JoinTable,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Relation
+  Relation,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  Index
 } from 'typeorm'
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsOptional,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsBoolean,
@@ -38,114 +40,120 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsObject
 } from 'class-validator'
+/*
+import { RoleTypeOrmEntitySchema } from '@core/role/infra/db/typeorm/role.typeorm-entity.schema'
+import { AuthRoleTypeOrmEntitySchema } from '@core/auth-role/infra/db/typeorm/auth-role.typeorm-entity.schema'
+*/
 
-import { ApiProperty } from '@nestjs/swagger'
-import dotenv from 'dotenv'
-import * as path from 'path'
-if (process.env.NODE_ENV === 'test') {
-  dotenv.config({
-    path: path.resolve(process.cwd(), '.env.test')
-  })
-}
+import { ApiProperty } from '@nestjs/swagger';
+(async function () {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+  const dotenv = require('dotenv')
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const path = require('path')
+  if (process.env.NODE_ENV === 'test') {
+    dotenv.config({
+      path: path.resolve(process.cwd(), '.env.test')
+    })
+  } else {
+    dotenv.config({
+      path: path.resolve(process.cwd(), '.env')
+    })
+  }
+}())
 @Entity({ name: 'auth' })
 export class AuthTypeOrmEntitySchema {
   @ApiProperty({
     description: 'ID',
-    required: false
+    required: false,
+
   })
   @Column({
     type: 'uuid',
     name: 'id',
 
-    primary: true
+    primary: true,
+
   })
   @PrimaryColumn()
-  @IsUUID()
-  id: string
 
-  @ApiProperty({
-    description: 'Nome',
-    required: false,
-    maxLength: 100
-  })
-  @Column({
-    type: 'varchar',
-    name: 'name',
-    nullable: false
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 100)
-  name: string
+  @IsUUID()
+    id: string
 
   @ApiProperty({
     description: 'E-mail',
     required: false,
-    maxLength: 100
+    maxLength: 150,
   })
   @Column({
     type: 'varchar',
     name: 'email',
-    nullable: false
+    nullable: false,
+
   })
+
+  @Index('idx_auth_email', { unique: true })
+
   @IsString()
   @IsNotEmpty()
-  @Length(1, 100)
-  email: string
+  @Length(1, 150)
+    email: string
+
+  @ApiProperty({
+    description: 'Nome',
+    required: false,
+    maxLength: 120,
+  })
+  @Column({
+    type: 'varchar',
+    name: 'name',
+    nullable: false,
+
+  })
+
+  @IsString()
+  @IsNotEmpty()
+  @Length(1, 120)
+    name: string
 
   @ApiProperty({
     description: 'Senha',
-    required: false,
-    maxLength: 100
+    required: true,
+    maxLength: 80,
   })
   @Column({
     type: 'varchar',
     name: 'password',
-    nullable: false
+    nullable: true,
+
   })
+
   @IsString()
-  @IsNotEmpty()
-  @Length(1, 100)
-  password: string
+  @IsOptional()
+  @Length(1, 80)
+    password: string
 
   @ApiProperty({
     description: 'Token de Atualização',
     required: true,
-    maxLength: 255
+    maxLength: 40,
   })
   @Column({
     type: 'varchar',
     name: 'refresh_token',
-    nullable: true
+    nullable: true,
+
   })
+
   @IsString()
   @IsOptional()
-  @Length(1, 255)
-  refreshToken: string
+  @Length(1, 40)
+    refreshToken: string
 
-  @ApiProperty({
-    description: 'Data de criação',
-    required: false
-  })
-  @Column({
-    type: process.env.DATABASE_TYPE === 'sqlite' ? 'datetime' : 'timestamp',
-    name: 'created_at',
-    nullable: false
-  })
-  @IsDateString()
-  @IsNotEmpty()
-  createdAt: Date
+  /* @ManyToMany(() => RoleTypeOrmEntitySchema)
+  @JoinTable()
+    role: Relation<RoleTypeOrmEntitySchema>[]
 
-  @ApiProperty({
-    description: 'Data de atualização',
-    required: true
-  })
-  @Column({
-    type: process.env.DATABASE_TYPE === 'sqlite' ? 'datetime' : 'timestamp',
-    name: 'updated_at',
-    nullable: true
-  })
-  @IsDateString()
-  @IsOptional()
-  updatedAt: Date
+  @OneToMany(() => AuthRoleTypeOrmEntitySchema, (authRole) => authRole.auth)
+    authRole: Relation<AuthRoleTypeOrmEntitySchema>[] */
 }

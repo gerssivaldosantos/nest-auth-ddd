@@ -10,31 +10,35 @@ export type FieldDataFaker = {
   description?: string
   primary?: boolean
   nullable?: boolean
+  default?: any
 }
 
 export class FakerDataBuilder {
-  get fields(): FieldDataFaker[] {
+  get fields (): FieldDataFaker[] {
     return this.#fields
   }
 
-  set fields(value: FieldDataFaker[]) {
+  set fields (value: FieldDataFaker[]) {
     this.#fields = value
   }
 
   #fields: FieldDataFaker[] = []
 
-  constructor(fields: FieldDataFaker[]) {
+  constructor (fields: FieldDataFaker[]) {
     this.fields = fields
   }
 
-  _buildValid(): any {
+  _buildValid (): any {
     this.fields.forEach((field) => {
       this.setValidField(field)
     })
     return this
   }
 
-  _buildInValid(fields: FieldDataFaker[], invalidField: string[]): any {
+  _buildInValid (
+    fields: FieldDataFaker[],
+    invalidField: string[],
+  ): any {
     fields.forEach((field) => {
       invalidField.indexOf(field.name) > -1
         ? this.setInValidField(field)
@@ -43,7 +47,7 @@ export class FakerDataBuilder {
     return this
   }
 
-  getRandomField(
+  getRandomField (
     ignoredFields: string[] = [],
     invertIgnore = false
   ): FieldDataFaker {
@@ -57,7 +61,7 @@ export class FakerDataBuilder {
     ]
   }
 
-  setValidField(field: FieldDataFaker): any {
+  setValidField (field: FieldDataFaker): any {
     const { name, type, length, value } = field
     switch (type.toLowerCase()) {
       case 'string':
@@ -87,7 +91,7 @@ export class FakerDataBuilder {
     return this
   }
 
-  setInValidField(field: FieldDataFaker): any {
+  setInValidField (field: FieldDataFaker): any {
     const { name, type, length, value } = field
     switch (type.toLowerCase()) {
       case 'string':

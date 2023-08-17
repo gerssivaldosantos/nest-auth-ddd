@@ -12,8 +12,11 @@ import { v4 as uuid } from 'uuid'
 /* TODO: Ao atualizar para as versões 0.3.16 e 0.3.17, os testes com find estão com problema
  *   no timezone da data */
 /* TODO: O erro do timezone voltou a ocorrer, mesmo na versão 0.3.15 (timezone) */
-import { createAuthRelations } from '@core/auth/domain/repository/auth.test.helper'
+import {
+  createAuthRelations
+} from '@core/auth/domain/repository/auth.test.helper'
 import { FieldDataFaker } from '@core/@shared/domain/tests/faker.databuilder'
+import { describe, it, beforeEach, afterEach, expect } from 'vitest'
 
 const builder = new AuthFakerDatabuilder()
 
@@ -81,9 +84,7 @@ describe('Auth Repository', () => {
     const repository = new AuthTypeOrmRepository(dataSource, notification)
     await repository.insert(entity)
 
-    const fieldNames = entity
-      .getFilledProperties()
-      .filter((field) => ![].includes(field))
+    const fieldNames = entity.getFilledProperties().filter((field) => ![].includes(field))
 
     const builder2 = new AuthFakerDatabuilder().buildValid()
     const relations2 = await createAuthRelations(dataSource)
@@ -116,11 +117,11 @@ describe('Auth Repository', () => {
     const repository = new AuthTypeOrmRepository(dataSource, notification)
     await repository.insert(entity)
 
-    const fieldNames = entity
-      .getFilledProperties()
-      .filter((field) => ![].includes(field))
+    const fieldNames = entity.getFilledProperties().filter((field) => ![].includes(field))
     for (const fieldName of fieldNames) {
-      const inputData2 = new AuthFakerDatabuilder().buildInValid([fieldName])
+      const inputData2 = new AuthFakerDatabuilder().buildInValid([
+        fieldName
+      ])
       const entity2 = new AuthEntity(
         {
           ...inputData2
@@ -440,7 +441,8 @@ describe('Auth Repository', () => {
   it('Should execute a RAW SQL and return a record', async () => {
     const inputValid = builder.buildValid()
     const relations = await createAuthRelations(dataSource)
-    const field = builder.getRandomField([])
+    const fieldsToIgnore = []
+    const fields = builder.fields.filter(field => !fieldsToIgnore.includes(field.name))
     const firstEntity = new AuthEntity(
       {
         ...inputValid,
@@ -463,14 +465,16 @@ describe('Auth Repository', () => {
       )
       await repository.insert(entity)
     }
-    const fieldValue =
-      field.type !== 'number'
+    for (const field of fields) {
+      const fieldValue =
+      (field.type.toLowerCase() !== 'number' && field.type.toLowerCase() !== 'boolean')
         ? `'${firstEntity[field.name]}'`
         : firstEntity[field.name]
 
-    const searchResult = await repository.executeSQL(
+      const searchResult = await repository.executeSQL(
       `select * from "auth" where ${field.dbname}=${fieldValue}`
-    )
-    expect(searchResult.length).toBeGreaterThan(0)
+      )
+      expect(searchResult.length).toBeGreaterThan(0)
+    }
   })
 })

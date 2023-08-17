@@ -1,10 +1,5 @@
 /* istanbul ignore file */
-import {
-  HttpException,
-  HttpStatus,
-  ValidationError,
-  ValidationPipeOptions
-} from '@nestjs/common'
+import { HttpException, HttpStatus, ValidationError, ValidationPipeOptions } from '@nestjs/common'
 
 const validationOptions: ValidationPipeOptions = {
   transform: true,

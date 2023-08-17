@@ -3,11 +3,11 @@ import Notification from '@core/@shared/domain/notification/notification'
 // eslint-disable-next-line no-unused-vars
 import { MinLength } from 'class-validator'
 import { NotificationErrorOutput } from '@core/@shared/domain/notification/notification.interface'
-
+import { describe, it, expect } from 'vitest'
 describe('Entity', () => {
   it('should return an entities context', () => {
     class Test extends Entity {
-      constructor() {
+      constructor () {
         const notification = new Notification()
         super(notification)
       }
@@ -19,15 +19,15 @@ describe('Entity', () => {
   it('should return an error notification', async () => {
     class Test extends Entity {
       @MinLength(10)
-      id: string
+        id: string
 
-      constructor(id: string) {
+      constructor (id: string) {
         const notification = new Notification()
         super(notification)
         this.id = id
       }
 
-      getPlainClass(): any {
+      getPlainClass (): any {
         return Test
       }
     }
@@ -39,15 +39,15 @@ describe('Entity', () => {
   it('should return an error notification id must be longer than or equal to 10 characters', async () => {
     class Test extends Entity {
       @MinLength(10)
-      id: string
+        id: string
 
-      constructor(id: string) {
+      constructor (id: string) {
         const notification = new Notification()
         super(notification)
         this.id = id
       }
 
-      getPlainClass(): any {
+      getPlainClass (): any {
         return Test
       }
     }
@@ -68,14 +68,14 @@ describe('Entity', () => {
     class Test extends Entity {
       private _test: string
       private name: string
-      constructor(id: string, name: string) {
+      constructor (id: string, name: string) {
         const notification = new Notification()
         super(notification, id)
         this.name = name
         this._test = 'test'
       }
 
-      set test(value: string) {
+      set test (value: string) {
         if (value) {
           this._test = value.replace(/[^0-9]/g, '')
         } else {
@@ -83,11 +83,11 @@ describe('Entity', () => {
         }
       }
 
-      get test(): any {
+      get test (): any {
         return this._test
       }
 
-      getPlainClass() {
+      getPlainClass () {
         return Test
       }
     }
@@ -102,7 +102,7 @@ describe('Entity', () => {
   it('should return an entities property in output format', () => {
     class Test extends Entity {
       private name: string
-      constructor(id: string, name: string) {
+      constructor (id: string, name: string) {
         const notification = new Notification()
         super(notification, id)
         this.name = name
@@ -116,9 +116,9 @@ describe('Entity', () => {
     })
   })
 
-  test('should return an error when the entity did not implement the "getPlainClass" method', async () => {
+  it('should return an error when the entity did not implement the "getPlainClass" method', async () => {
     class TestEntity extends Entity {
-      constructor() {
+      constructor () {
         const notification = new Notification()
         super(notification)
       }
@@ -133,13 +133,13 @@ describe('Entity', () => {
   it('should return a Test Class ', () => {
     class Test extends Entity {
       private _test: string
-      constructor() {
+      constructor () {
         const notification = new Notification()
         super(notification)
         this._test = 'test'
       }
 
-      set test(value: string) {
+      set test (value: string) {
         if (value) {
           this._test = value.replace(/[^0-9]/g, '')
         } else {
@@ -147,11 +147,11 @@ describe('Entity', () => {
         }
       }
 
-      get test(): any {
+      get test (): any {
         return this._test
       }
 
-      getPlainClass() {
+      getPlainClass () {
         return Test
       }
     }

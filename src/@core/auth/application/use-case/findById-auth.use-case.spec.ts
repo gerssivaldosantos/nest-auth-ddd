@@ -7,6 +7,7 @@ import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
 import { DataSource } from 'typeorm'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
+import { describe, it, beforeAll, expect, vi } from 'vitest'
 
 let notification: Notification
 let entity: AuthEntity
@@ -14,7 +15,6 @@ let result: SearchResult
 let dataSource: DataSource
 let repository: AuthTypeOrmRepository<AuthEntity>
 
-jest.setTimeout(10000) // 10 seconds
 describe('FindByIdAuthUseCase', () => {
   beforeAll(async () => {
     notification = new Notification()
@@ -34,7 +34,7 @@ describe('FindByIdAuthUseCase', () => {
   })
 
   it('Should get an Auth', async () => {
-    jest
+    vi
       .spyOn(repository, 'findById')
       .mockImplementation(async (): Promise<any> => {
         return Promise.resolve(result)
@@ -44,7 +44,7 @@ describe('FindByIdAuthUseCase', () => {
   })
 
   it('Should return a SearchResult when Auth not found', async () => {
-    jest
+    vi
       .spyOn(repository, 'findById')
       .mockImplementation(async (): Promise<any> => {
         const result: SearchResult = new SearchResult<AuthEntity>({
@@ -69,7 +69,7 @@ describe('FindByIdAuthUseCase', () => {
   })
 
   it('Should return a Notification error when id is not provided', async () => {
-    jest
+    vi
       .spyOn(repository, 'findById')
       .mockImplementation(async (): Promise<any> => {
         const notification = new Notification()

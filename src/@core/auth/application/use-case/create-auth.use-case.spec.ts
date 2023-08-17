@@ -8,9 +8,9 @@ import AuthEntity from '@core/auth/domain/entities/auth.entity'
 import crypto from 'crypto'
 import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
 import NotificationError from '@core/@shared/domain/notification/notification.error'
+import { describe, it, beforeEach, expect, vi } from 'vitest'
 const builder = new AuthFakerDatabuilder().buildValid()
 
-jest.setTimeout(10000) // 10 seconds
 describe('CreateAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
@@ -27,7 +27,7 @@ describe('CreateAuthUseCase', () => {
       ...new AuthFakerDatabuilder().buildValid()
     }
     const id = crypto.randomUUID()
-    jest.spyOn(repository, 'insert').mockImplementation((): Promise<any> => {
+    vi.spyOn(repository, 'insert').mockImplementation((): Promise<any> => {
       const data = {
         id,
         ...inputData
@@ -52,18 +52,14 @@ describe('CreateAuthUseCase', () => {
         ...builder
       }
       const useCase = new CreateAuthUseCase(repository)
-      await useCase
-        .execute(inputData)
-        .catch(async (response: NotificationError) => {
-          const notification = new Notification()
-          const mockEntity = new AuthEntity(inputData, notification)
-          await mockEntity.validate()
-          const { message, code } = response
-          expect(message).toEqual(
-            mockEntity.notification.getPlainMessageErrors()
-          )
-          expect(code).toEqual(422)
-        })
+      await useCase.execute(inputData).catch(async (response: NotificationError) => {
+        const notification = new Notification()
+        const mockEntity = new AuthEntity(inputData, notification)
+        await mockEntity.validate()
+        const { message, code } = response
+        expect(message).toEqual(mockEntity.notification.getPlainMessageErrors())
+        expect(code).toEqual(422)
+      })
     }
   })
 })

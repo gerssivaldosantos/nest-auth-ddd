@@ -17,9 +17,9 @@ function getConnectionParameters(): DataSourceOptions {
     username: output.parsed.DATABASE_USERNAME,
     password: output.parsed.DATABASE_PASSWORD,
     database: String(output.parsed.DATABASE_NAME),
-    entities: ['src/@core/**/*.schema.ts'],
+    entities: ['@/@core/**/*.schema.*{.ts,.js}'],
     synchronize: false,
-    migrations: ['src/database/migrations/**/*{.ts,.js}']
+    migrations: ['@/database/migrations/**/*{.ts,.js}']
   }
   /*
     return {

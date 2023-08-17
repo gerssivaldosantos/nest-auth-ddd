@@ -1,4 +1,5 @@
 import { AuthPresenter } from '@core/auth/application/presenter/auth.presenter'
+import { describe, it, expect } from 'vitest'
 
 describe('AuthPresenter', () => {
   it('should have a method entityToData', async () => {

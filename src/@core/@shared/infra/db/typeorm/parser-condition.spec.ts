@@ -12,6 +12,7 @@ import {
   Not
 } from 'typeorm'
 import { FilterCondition } from '@core/@shared/infra/types'
+import { describe, it, expect } from 'vitest'
 
 const parserCondition = new ParserCondition()
 describe('Parser condition', () => {

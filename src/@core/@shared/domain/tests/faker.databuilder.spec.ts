@@ -2,6 +2,7 @@ import {
   FakerDataBuilder,
   FieldDataFaker
 } from '@core/@shared/domain/tests/faker.databuilder'
+import { describe, it, expect } from 'vitest'
 
 const fields: FieldDataFaker[] = [
   { name: 'name', dbname: 'name', type: 'string', length: 80 },

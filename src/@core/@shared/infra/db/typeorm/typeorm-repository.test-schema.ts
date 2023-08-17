@@ -23,7 +23,7 @@ export class TestEntity extends Entity {
   @MaxLength(80, {
     message: 'Nome deve ter no máximo 80 caracteres'
   })
-  name: string
+    name: string
 
   @IsEmail(
     {},
@@ -35,13 +35,13 @@ export class TestEntity extends Entity {
     message: 'E-mail deve ter no máximo 120 caracteres'
   })
   @IsOptional()
-  email: string | null
+    email: string | null
 
-  getPlainClass(): any {
+  getPlainClass (): any {
     return TestEntity
   }
 
-  constructor(user: any, notification: NotificationInterface) {
+  constructor (user: any, notification: NotificationInterface) {
     super(notification, user?.id || null)
     this.name = user?.name
     this.email = user?.email

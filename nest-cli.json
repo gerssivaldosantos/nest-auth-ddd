@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
@@ -7,6 +8,8 @@
       "outDir": "dist/client"
     }],
     "watchAssets": true,
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "builder": "swc",
+    "typeCheck": true
   }
 }

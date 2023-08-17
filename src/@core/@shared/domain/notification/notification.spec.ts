@@ -3,7 +3,7 @@ import {
   NotificationErrorInput,
   NotificationErrorOutput
 } from '@core/@shared/domain/notification/notification.interface'
-
+import { describe, it, expect } from 'vitest'
 describe('Notification tests', () => {
   it('should return an errors message', () => {
     const notification = new Notification()

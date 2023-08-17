@@ -1,25 +1,18 @@
 {
+    "$schema": "https://json.schemastore.org/swcrc",
+    "sourceMaps": true,
+    "minify": false,
     "jsc": {
         "parser": {
           "syntax": "typescript",
           "tsx": false,
           "decorators": true
         },
-        "target": "es2017",
+        "target": "es2021",
         "keepClassNames": true,
         "transform": {
           "legacyDecorator": true,
           "decoratorMetadata": true
-        },
-        "baseUrl": "./src",
-        "paths": {
-            "@core/*": [
-                "./@core/*"
-            ]
         }
-      },
-      "module": {
-        "type": "commonjs",
-        "noInterop": true
-      }
+    }
 }

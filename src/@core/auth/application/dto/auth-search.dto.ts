@@ -10,7 +10,7 @@ export class AuthSearchDto {
   })
   @IsNumber()
   @IsOptional()
-  page?: number | 1
+    page?: number | 1
 
   @ApiProperty({
     description: 'Number of records per page',
@@ -19,7 +19,7 @@ export class AuthSearchDto {
   })
   @IsNumber()
   @IsOptional()
-  perPage?: number | 10
+    perPage?: number | 10
 
   @ApiProperty({
     description: 'Field to be  sorted and direction',
@@ -28,7 +28,7 @@ export class AuthSearchDto {
     required: false
   })
   @IsOptional()
-  sort?: SortParam
+    sort?: SortParam
 
   @ApiProperty({
     description: 'Filter condition to apply',
@@ -38,7 +38,7 @@ export class AuthSearchDto {
   })
   @IsOptional()
   @IsArray()
-  filter?: FilterCondition
+    filter?: FilterCondition
 
   @ApiProperty({
     description: 'Attributes to be included in the response',
@@ -47,5 +47,5 @@ export class AuthSearchDto {
     example: ['id', 'name', 'email']
   })
   @IsOptional()
-  attributes?: string[]
+    attributes?: string[]
 }

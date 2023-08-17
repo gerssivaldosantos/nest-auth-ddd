@@ -1,5 +1,5 @@
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsOptional,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   IsBoolean,
@@ -24,49 +24,32 @@ import {
 import { ApiProperty } from '@nestjs/swagger'
 
 export class AuthCreateResultDto {
-  @ApiProperty({ description: 'ID' })
-  @IsUUID()
-  @IsOptional()
+@ApiProperty({ description: 'ID' })
+@IsUUID()
+@IsOptional()
   id: string
 
-  @ApiProperty({ description: 'Nome' })
-  @IsString()
-  @IsNotEmpty({ message: 'Nome é obrigatório' })
-  @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
-  name: string
-
-  @ApiProperty({ description: 'E-mail' })
-  @IsString()
-  @IsNotEmpty({ message: 'E-mail é obrigatório' })
-  @MaxLength(100, { message: 'E-mail deve ter no máximo 100 caracteres' })
+@ApiProperty({ description: 'E-mail' })
+@IsString()
+@IsNotEmpty({ message: 'E-mail é obrigatório' })
+@MaxLength(150, { message: 'E-mail deve ter no máximo 150 caracteres' })
   email: string
 
-  @ApiProperty({ description: 'Senha' })
-  @IsString()
-  @IsNotEmpty({ message: 'Senha é obrigatório' })
-  @MaxLength(100, { message: 'Senha deve ter no máximo 100 caracteres' })
-  password: string
+@ApiProperty({ description: 'Nome' })
+@IsString()
+@IsNotEmpty({ message: 'Nome é obrigatório' })
+@MaxLength(120, { message: 'Nome deve ter no máximo 120 caracteres' })
+  name: string
 
-  @ApiProperty({ description: 'Token de Atualização' })
-  @IsString()
-  @IsOptional()
-  @MaxLength(255, {
-    message: 'Token de Atualização deve ter no máximo 255 caracteres'
-  })
+@ApiProperty({ description: 'Senha' })
+@IsString()
+@IsOptional()
+@MaxLength(80, { message: 'Senha deve ter no máximo 80 caracteres' })
+  password: string | null
+
+@ApiProperty({ description: 'Token de Atualização' })
+@IsString()
+@IsOptional()
+@MaxLength(40, { message: 'Token de Atualização deve ter no máximo 40 caracteres' })
   refreshToken: string | null
-
-  @ApiProperty({ description: 'Data de Expiração do Token de Atualização' })
-  @IsDateString()
-  @IsOptional()
-  refreshTokenExpiration: string | null
-
-  @ApiProperty({ description: 'Data de criação' })
-  @IsDateString()
-  @IsNotEmpty({ message: 'Data de criação é obrigatório' })
-  createdAt: string
-
-  @ApiProperty({ description: 'Data de atualização' })
-  @IsDateString()
-  @IsOptional()
-  updatedAt: string | null
 }

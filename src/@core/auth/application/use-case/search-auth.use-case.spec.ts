@@ -7,8 +7,8 @@ import { SearchAuthUseCase } from '@core/auth/application/use-case/search-auth.u
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 import { SearchDto } from '@core/@shared/application/dto/search.dto'
 import { AuthFakerDatabuilder } from '@core/auth/domain/entities/auth.faker.databuilder'
+import { describe, it, beforeEach, expect, vi } from 'vitest'
 
-jest.setTimeout(10000) // 10 seconds
 describe('SearchAuthUseCase', () => {
   let dataSource: DataSource
   let notification: Notification
@@ -28,7 +28,7 @@ describe('SearchAuthUseCase', () => {
     const searchInput: SearchDto = {
       filter: [expression]
     }
-    jest.spyOn(repository, 'search').mockImplementation((): Promise<any> => {
+    vi.spyOn(repository, 'search').mockImplementation((): Promise<any> => {
       return Promise.resolve({
         items: [fakeData],
         total: 1,
@@ -73,7 +73,7 @@ describe('SearchAuthUseCase', () => {
     const searchInput: SearchDto = {
       filter: [expression]
     }
-    jest.spyOn(repository, 'search').mockImplementation((): Promise<any> => {
+    vi.spyOn(repository, 'search').mockImplementation((): Promise<any> => {
       return Promise.resolve({
         items: [],
         total: 0,

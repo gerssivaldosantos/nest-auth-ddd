@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm'
 import { TypeOrmFactory } from '@core/@shared/infra/db/typeorm/datasource'
-
+import { describe, it, expect } from 'vitest'
 describe('DataSource', () => {
   it('should create a DataSource instance', async () => {
     const dataSource = await TypeOrmFactory.getDataSourceInstance('.env.test')

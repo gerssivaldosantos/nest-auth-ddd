@@ -1,6 +1,6 @@
 import NotificationError from '@core/@shared/domain/notification/notification.error'
 import { NotificationErrorOutput } from '@core/@shared/domain/notification/notification.interface'
-
+import { describe, it, expect } from 'vitest'
 describe('Notification error tests', () => {
   it('should return an errors message', () => {
     const notificationResult: Record<string, NotificationErrorOutput> = {
@@ -11,11 +11,7 @@ describe('Notification error tests', () => {
         value: 'joao'
       }
     }
-    const notification = new NotificationError(
-      'Test error',
-      111,
-      notificationResult
-    )
+    const notification = new NotificationError('Test error', 111, notificationResult)
 
     expect(notification.errors).toMatchObject(notificationResult)
   })
@@ -29,18 +25,16 @@ describe('Notification error tests', () => {
         value: 'joao'
       }
     }
-    const notification = new NotificationError(
-      'Test error',
-      111,
-      notificationResult
-    )
+    const notification = new NotificationError('Test error', 111, notificationResult)
     const json = notification.toJSON()
 
     expect(json).toEqual({
       code: 111,
       errors: {
         name: {
-          messages: ['notification error'],
+          messages: [
+            'notification error'
+          ],
           context: 'User',
           invalid: true,
           value: 'joao'

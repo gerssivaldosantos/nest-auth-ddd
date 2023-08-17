@@ -2,11 +2,12 @@ import { DataSource, DataSourceOptions } from 'typeorm'
 import { config as readEnv } from 'dotenv'
 import * as path from 'path'
 import { TestEntitySchema } from '@core/@shared/infra/db/typeorm/typeorm-repository.test-schema'
+import { AuthTypeOrmEntitySchema } from '@core/auth/infra/db/typeorm/auth.typeorm-entity.schema'
 
 export class TypeOrmFactory {
   public static dataSource: DataSource
 
-  public static async getDataSourceInstance(env: string): Promise<DataSource> {
+  public static async getDataSourceInstance (env: string): Promise<DataSource> {
     if (!this.dataSource || !this.dataSource.isInitialized) {
       this.dataSource = new DataSource(
         TypeOrmFactory.getConnectionParameters(env)
@@ -16,7 +17,7 @@ export class TypeOrmFactory {
     return this.dataSource
   }
 
-  public static getConnectionParameters(env = '.env'): DataSourceOptions {
+  public static getConnectionParameters (env = '.env'): DataSourceOptions {
     const output = readEnv({
       path: path.resolve(process.cwd(), env)
     })
@@ -29,7 +30,8 @@ export class TypeOrmFactory {
       username: output.parsed.DATABASE_USERNAME,
       password: output.parsed.DATABASE_PASSWORD,
       database: String(output.parsed.DATABASE_NAME),
-      entities: ['src/@core/**/*.schema.ts', TestEntitySchema],
+      entities: [AuthTypeOrmEntitySchema,
+        TestEntitySchema],
       synchronize: Boolean(output.parsed.DATABASE_SYNCHRONIZE) === true,
       logging: Boolean(output.parsed.DATABASE_LOGGING) === false
     }

@@ -1,9 +1,9 @@
 import { SearchParams } from '@core/@shared/domain/repository/search-params.repository'
 import { ParserConditionInterface } from '@core/@shared/domain/repository/parser-condition-interface'
 import { FilterCondition } from '@core/@shared/infra/types'
-
+import { describe, it, expect } from 'vitest'
 class Parser implements ParserConditionInterface {
-  parser(filter: FilterCondition) {
+  parser (filter: FilterCondition) {
     return filter
   }
 }

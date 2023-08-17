@@ -6,7 +6,7 @@ import NotificationInterface, {
 export default class Notification implements NotificationInterface {
   private errors: Record<string, NotificationErrorOutput> = {}
 
-  addError(error: NotificationErrorInput): void {
+  addError (error: NotificationErrorInput): void {
     if (this.errors[error.target]) {
       this.errors[error.target].value = error.value
       this.errors[error.target].invalid = true
@@ -22,11 +22,11 @@ export default class Notification implements NotificationInterface {
     }
   }
 
-  getErrors(): Record<string, NotificationErrorOutput> {
+  getErrors (): Record<string, NotificationErrorOutput> {
     return this.errors
   }
 
-  getFlatMessagesErrors(): Record<string, NotificationErrorOutput> {
+  getFlatMessagesErrors (): Record<string, NotificationErrorOutput> {
     const errors: Record<string, NotificationErrorOutput> = JSON.parse(
       JSON.stringify(this.errors)
     )
@@ -36,7 +36,7 @@ export default class Notification implements NotificationInterface {
     return errors
   }
 
-  getPlainMessageErrors() {
+  getPlainMessageErrors () {
     const error = []
     for (const key in this.errors) {
       error.push(`${(this.errors[key].messages as string[]).join(', ')}`)
@@ -44,11 +44,11 @@ export default class Notification implements NotificationInterface {
     return error.join(', ')
   }
 
-  hasError(): boolean {
+  hasError (): boolean {
     return Object.keys(this.errors).length > 0
   }
 
-  clearErrors() {
+  clearErrors () {
     this.errors = {}
   }
 }

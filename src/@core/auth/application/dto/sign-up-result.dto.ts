@@ -27,31 +27,31 @@ export class SignUpResultDto {
   @ApiProperty({ description: 'ID' })
   @IsUUID()
   @IsOptional()
-  id: string
+    id: string
 
   @ApiProperty({ description: 'Nome' })
   @IsString()
   @IsNotEmpty({ message: 'Nome é obrigatório' })
   @MaxLength(100, { message: 'Nome deve ter no máximo 100 caracteres' })
-  name: string
+    name: string
 
   @ApiProperty({ description: 'E-mail' })
   @IsString()
   @IsNotEmpty({ message: 'E-mail é obrigatório' })
   @MaxLength(100, { message: 'E-mail deve ter no máximo 100 caracteres' })
-  email: string
+    email: string
 
   @ApiProperty({ description: 'Token de Atualização' })
   @IsString()
   @MaxLength(255, {
     message: 'Token de Atualização deve ter no máximo 255 caracteres'
   })
-  refreshToken: string
+    refreshToken: string
 
   @ApiProperty({ description: 'Token de acesso' })
   @MaxLength(255, {
     message: 'Token de Acesso deve ter no máximo 255 caracteres'
   })
   @IsString()
-  accessToken: string
+    accessToken: string
 }
