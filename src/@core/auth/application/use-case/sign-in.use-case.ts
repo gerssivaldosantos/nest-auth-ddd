@@ -39,7 +39,7 @@ export class SignInUseCase extends UseCase {
       const {
         total: resultTotal,
         items: [resultFindByEmail]
-      } = await this.repository.search(
+      } = await this.repository.search<AuthEntity>(
         new SearchParams<FilterCondition>(
           {
             filter: [{ email: data.email }]
